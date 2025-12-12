@@ -125,6 +125,9 @@ npm run test:ui    # Run with UI
 - TypeScript
 - Vitest + Testing Library
 
-## 📝 License
 
-MIT License
+## AI Disclosure
+
+Yes. AI was used in creating this tool. There be dragons! 
+
+
