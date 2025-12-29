@@ -135,3 +135,18 @@ export const progress = derived(
     return { completed, total, percentage: (completed / total) * 100 };
   }
 );
+
+export const hasContent = derived(
+  assessmentStore,
+  $a => {
+    if ($a.organizationName.trim()) return true;
+    if ($a.overallNotes.trim()) return true;
+    if ($a.assessors.some(n => n && n.trim())) return true;
+    for (const d of $a.dimensions) {
+      if (d.maturityLevel !== null) return true;
+      if (d.notes && d.notes.trim()) return true;
+      if (d.proofPoints.some(p => p.completed || p.notApplicable || (p.evidence && p.evidence.trim()))) return true;
+    }
+    return false;
+  }
+);

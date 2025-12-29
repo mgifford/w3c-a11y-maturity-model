@@ -130,4 +130,17 @@ npm run test:ui    # Run with UI
 
 Yes. AI was used in creating this tool. There be dragons! 
 
+## 📣 Social Media Integration
+
+- Open Graph meta tags are included in index.html for rich link previews.
+- A share panel is available via the "Share" button in the header with:
+	- Web Share API on supported devices
+	- LinkedIn, Bluesky, Mastodon, Email links
+	- Copy link to clipboard
+- Social preview image lives at public/social-card.svg (1200x630). For best compatibility, replace with a PNG:
+	- Create a 1200x630 PNG (under 1MB) at public/social-card.png
+	- Update index.html to point og:image to ./social-card.png
+- Mastodon prompts for your instance domain on first use and remembers it.
+- All assets and links use relative paths to work under the GitHub Pages base path.
+
 

@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { assessmentStore } from '../stores/assessmentStore';
+  import { assessmentStore, hasContent } from '../stores/assessmentStore';
+  import SocialShare from './SocialShare.svelte';
+  import LogoUrl from '../assets/accessibility-maturity-model-logo.svg';
+
+  let shareOpen = false;
+  function toggleShare() { shareOpen = !shareOpen; }
+  function closeShare() { shareOpen = false; }
 
   function handleReset() {
     if (confirm('Are you sure you want to start a new assessment? This will clear all current data.')) {
@@ -47,8 +53,13 @@
 <header class="header">
   <div class="container">
     <div class="header-content">
-      <h1>W3C Accessibility Maturity Model</h1>
-      <p class="tagline">Assessment Tool</p>
+      <div class="brand">
+        <img src={LogoUrl} alt="Accessibility Maturity Model logo" class="logo" width="48" height="48" />
+        <div class="titles">
+          <h1>W3C Accessibility Maturity Model</h1>
+          <p class="tagline">Assessment Tool</p>
+        </div>
+      </div>
     </div>
     <nav class="header-actions" aria-label="Main actions">
       <button on:click={handleExport} class="btn btn-secondary" title="Export assessment data">
@@ -57,9 +68,22 @@
       <button on:click={handleImport} class="btn btn-secondary" title="Import assessment data">
         <span aria-hidden="true">📤</span> Import
       </button>
-      <button on:click={handleReset} class="btn btn-danger" title="Reset and start new assessment">
-        <span aria-hidden="true">🔄</span> New Assessment
-      </button>
+      {#if $hasContent}
+        <button on:click={handleReset} class="btn btn-danger" title="Reset and start new assessment">
+          <span aria-hidden="true">🔄</span> New Assessment
+        </button>
+      {/if}
+      <div class="share-wrapper">
+        <button 
+          on:click={toggleShare} 
+          class="btn btn-secondary" 
+          aria-haspopup="dialog" 
+          aria-expanded={shareOpen}
+          title="Share this tool">
+          <span aria-hidden="true">🔗</span> Share
+        </button>
+        <SocialShare open={shareOpen} onClose={closeShare} />
+      </div>
     </nav>
   </div>
 </header>
@@ -84,6 +108,18 @@
     font-weight: 600;
   }
 
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo {
+    display: block;
+  }
+
+  .titles { display: flex; flex-direction: column; }
+
   .tagline {
     margin-top: 0.25rem;
     opacity: 0.9;
@@ -96,6 +132,7 @@
     gap: 1rem;
     flex-wrap: wrap;
   }
+  .share-wrapper { position: relative; }
 
   .btn {
     padding: 0.625rem 1.25rem;
@@ -135,6 +172,8 @@
       font-size: 1.5rem;
     }
 
+    .brand { align-items: flex-start; }
+    .logo { width: 40px; height: 40px; }
     .tagline {
       font-size: 1rem;
     }
