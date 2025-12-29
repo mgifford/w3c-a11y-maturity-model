@@ -85,6 +85,7 @@
   }
 
   function onKeydown(e: KeyboardEvent) {
+    if (!open) return;
     if (e.key === 'Escape') {
       onClose?.();
     }
@@ -96,8 +97,10 @@
   });
 </script>
 
+<svelte:window on:keydown={onKeydown} />
+
 {#if open}
-  <div class="share-panel" bind:this={panel} on:keydown={onKeydown} role="dialog" aria-label="Share this tool">
+  <div class="share-panel" bind:this={panel} role="dialog" aria-label="Share this tool" tabindex="-1">
     {#if canWebShare}
       <button class="btn btn-primary full" on:click={handleWebShare} title="Share using your device">
         <span aria-hidden="true">📣</span> Share via device
