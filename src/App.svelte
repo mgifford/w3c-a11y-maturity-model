@@ -64,6 +64,12 @@
           Data is stored locally in your browser.
         </small>
       </p>
+      <p>
+        <small>
+          Open source and open to contributions on 
+          <a href="https://github.com/mgifford/w3c-a11y-maturity-model" target="_blank" rel="noopener">GitHub</a>.
+        </small>
+      </p>
     </div>
   </footer>
 </div>
