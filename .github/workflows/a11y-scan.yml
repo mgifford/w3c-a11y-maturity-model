@@ -1,0 +1,35 @@
+name: Accessibility Scanner
+
+on:
+  workflow_dispatch: # Run manually from the Actions tab
+  schedule:
+    - cron: '0 6 * * 1' # Run every Monday at 06:00 UTC
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  accessibility_scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/accessibility-scanner@v2
+        with:
+          # URLs of the deployed GitHub Pages site to scan
+          urls: |
+            https://mgifford.github.io/w3c-a11y-maturity-model/
+          # Repository where issues (and optional Copilot PRs) will be filed
+          repository: mgifford/w3c-a11y-maturity-model
+          # The action requires a fine-grained Personal Access Token (PAT)
+          # because the built-in GITHUB_TOKEN lacks cross-job write capabilities
+          # needed by the scanner. Create a PAT with:
+          #   actions:write, contents:write, issues:write, pull-requests:write,
+          #   metadata:read
+          # Then add it as a repository secret named GH_TOKEN at:
+          #   Settings > Secrets and variables > Actions > New repository secret
+          token: ${{ secrets.GH_TOKEN }}
+          # Cache key for storing scan results between runs
+          cache_key: a11y-w3c-a11y-maturity-model
+          # Set to true if you don't have GitHub Copilot on this account
+          # skip_copilot_assignment: true
