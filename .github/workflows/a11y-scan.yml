@@ -21,14 +21,13 @@ jobs:
             https://mgifford.github.io/w3c-a11y-maturity-model/
           # Repository where issues (and optional Copilot PRs) will be filed
           repository: mgifford/w3c-a11y-maturity-model
-          # The action requires a fine-grained Personal Access Token (PAT)
-          # because the built-in GITHUB_TOKEN lacks cross-job write capabilities
-          # needed by the scanner. Create a PAT with:
+          # A fine-grained Personal Access Token (PAT) with:
           #   actions:write, contents:write, issues:write, pull-requests:write,
           #   metadata:read
-          # Then add it as a repository secret named GH_TOKEN at:
+          # can be stored as a repository secret named GH_TOKEN at:
           #   Settings > Secrets and variables > Actions > New repository secret
-          token: ${{ secrets.GH_TOKEN }}
+          # Falls back to the built-in GITHUB_TOKEN when GH_TOKEN is not set.
+          token: ${{ secrets.GH_TOKEN || github.token }}
           # Cache key for storing scan results between runs
           cache_key: a11y-w3c-a11y-maturity-model
           # Set to true if you don't have GitHub Copilot on this account
