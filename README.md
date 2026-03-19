@@ -128,7 +128,26 @@ npm run test:ui    # Run with UI
 
 ## AI Disclosure
 
-Yes. AI was used in creating this tool. There be dragons! 
+This project uses AI tools during development. No AI runs at runtime — the deployed application is a static site with no server-side or browser-based AI components.
+
+### How AI has been used to build this project
+
+| AI Tool | Used For |
+|---------|----------|
+| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, and generating documentation across multiple pull requests |
+
+### Is AI used when running the program?
+
+No. The application is a fully static Svelte/TypeScript site. No AI model is invoked at runtime, server-side, or in the browser when a user interacts with the tool.
+
+### Is browser-based AI enabled?
+
+No. The application does not use any browser-based AI APIs (e.g., WebLLM, window.ai, or similar). All computation is standard JavaScript with no AI inference.
+
+### Notes
+
+- Each AI-assisted contribution is made via pull requests authored by `Copilot` in the GitHub repository history.
+- This disclosure will be updated as additional AI tools are introduced or their use changes.
 
 ## 📣 Social Media Integration
 

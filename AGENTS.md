@@ -119,6 +119,19 @@ Pull requests should include:
 - Notes on accessibility impact
 - Documentation of known limitations or trade-offs
 
+## AI Disclosure (required)
+
+This project requires transparency about AI involvement. Whenever an AI agent makes changes to this repository:
+
+- Update the **AI Disclosure** section in `README.md` to reflect the AI tool used.
+- Identify **which LLM or AI service** was used (e.g., GitHub Copilot powered by Claude, GPT-4, Gemini, etc.).
+- Describe **what the AI was used for** (e.g., writing code, fixing bugs, generating documentation, reviewing PRs).
+- Do **not** list AI tools that were not actually used.
+- Do **not** claim AI is used at runtime or in the browser unless it genuinely is.
+- Each distinct AI tool or model must have its own entry in the disclosure.
+
+The goal is honest, specific disclosure — not generic acknowledgment.
+
 ## Definition of Done
 A change is complete only when:
 - The conceptual intent of the model is preserved
@@ -126,6 +139,7 @@ A change is complete only when:
 - Accessibility has not regressed
 - Limitations and assumptions are explicit
 - The project remains honest about what it does and does not provide
+- AI use has been disclosed in `README.md` if any AI was involved in the change
 
 This project values clarity, accessibility, and integrity over simplification or false certainty.
 
