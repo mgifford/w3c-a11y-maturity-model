@@ -23,7 +23,7 @@
     "jsdom": "^28.1.0",
     "svelte": "^5.55.0",
     "svelte-check": "^4.4.5",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.2",
     "vite": "^8.0.2",
     "vitest": "^4.0.18",
     "sharp": "^0.34.5",
