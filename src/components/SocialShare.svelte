@@ -183,7 +183,7 @@
     border: none; border-radius: 6px; 
     cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; 
   }
-  .btn-primary { background: #3498db; color: #fff; }
+  .btn-primary { background: #2471a3; color: #fff; }
   .btn-secondary { background: #ecf0f1; color: #2c3e50; }
   .btn.full { width: 100%; justify-content: center; }
   .btn.close { width: 100%; justify-content: center; margin-top: 0.5rem; background: #f0f3f6; }
