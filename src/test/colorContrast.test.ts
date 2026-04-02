@@ -48,3 +48,58 @@ describe('WCAG color contrast - Header btn-secondary', () => {
     expect(oldRatio).toBeLessThan(4.5);
   });
 });
+
+describe('WCAG color contrast - Summary btn-primary and btn-secondary', () => {
+  const WHITE = '#ffffff';
+  // Colors used by .btn-primary and .btn-secondary in Summary.svelte
+  const BTN_PRIMARY_BG = '#2471a3';
+  const BTN_PRIMARY_HOVER_BG = '#1a5c8a';
+  const BTN_SECONDARY_BG = '#546475';
+  const BTN_SECONDARY_HOVER_BG = '#435262';
+
+  it('btn-primary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_PRIMARY_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('btn-primary hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_PRIMARY_HOVER_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('btn-secondary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_SECONDARY_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('btn-secondary hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_SECONDARY_HOVER_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('old btn-primary color #3498db fails contrast (documents the regression it prevents)', () => {
+    const oldRatio = contrastRatio('#3498db', WHITE);
+    expect(oldRatio).toBeLessThan(4.5);
+  });
+
+  it('old btn-secondary color #95a5a6 fails contrast (documents the regression it prevents)', () => {
+    const oldRatio = contrastRatio('#95a5a6', WHITE);
+    expect(oldRatio).toBeLessThan(4.5);
+  });
+});
+
+describe('WCAG color contrast - SocialShare btn-primary', () => {
+  const WHITE = '#ffffff';
+  // Colors used by .btn-primary in SocialShare.svelte
+  const BTN_PRIMARY_BG = '#2471a3';
+
+  it('btn-primary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_PRIMARY_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('old btn-primary color #3498db fails contrast (documents the regression it prevents)', () => {
+    const oldRatio = contrastRatio('#3498db', WHITE);
+    expect(oldRatio).toBeLessThan(4.5);
+  });
+});
