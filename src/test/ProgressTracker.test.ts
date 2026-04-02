@@ -143,6 +143,6 @@ describe('ProgressTracker Component', () => {
     render(ProgressTracker, { props: { currentView: 'overview' } });
     
     expect(screen.getByText(/proof points:/i)).toBeInTheDocument();
-    expect(screen.getByText(/0 of \d+ completed/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 of 89 completed/i)).toBeInTheDocument();
   });
 });

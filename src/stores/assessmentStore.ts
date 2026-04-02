@@ -63,7 +63,7 @@ export function createAssessmentStore() {
               p.id === proofPointId ? { 
                 ...p, 
                 notApplicable: !p.notApplicable,
-                completed: !p.notApplicable ? false : p.completed 
+                completed: p.notApplicable ? p.completed : false 
               } : p
             )
           } : d
