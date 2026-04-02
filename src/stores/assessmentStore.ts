@@ -2,7 +2,7 @@ import { writable, derived } from 'svelte/store';
 import type { Assessment, Dimension, MaturityLevel } from '../types';
 import { initialDimensions } from '../data/dimensionsData';
 
-function createAssessmentStore() {
+export function createAssessmentStore() {
   const storedData = localStorage.getItem('a11y-assessment');
   
   const initialAssessment: Assessment = storedData ? JSON.parse(storedData) : {
@@ -63,7 +63,7 @@ function createAssessmentStore() {
               p.id === proofPointId ? { 
                 ...p, 
                 notApplicable: !p.notApplicable,
-                completed: p.notApplicable ? false : p.completed 
+                completed: !p.notApplicable ? false : p.completed 
               } : p
             )
           } : d

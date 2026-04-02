@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
 import OrganizationInfo from '../components/OrganizationInfo.svelte';
+import { assessmentStore } from '../stores/assessmentStore';
 
 describe('OrganizationInfo Component', () => {
   beforeEach(() => {
     localStorage.clear();
+    assessmentStore.reset();
   });
 
   it('renders organization name input', () => {
@@ -19,7 +21,7 @@ describe('OrganizationInfo Component', () => {
   it('renders assessor input and add button', () => {
     render(OrganizationInfo);
     
-    const input = screen.getByLabelText(/assessment team members/i);
+    const input = screen.getByRole('textbox', { name: /assessment team members/i });
     const addButton = screen.getByRole('button', { name: /add team member/i });
     
     expect(input).toBeInTheDocument();
@@ -38,7 +40,7 @@ describe('OrganizationInfo Component', () => {
   it('adds assessor to list when clicking add button', async () => {
     render(OrganizationInfo);
     
-    const input = screen.getByLabelText(/assessment team members/i) as HTMLInputElement;
+    const input = screen.getByRole('textbox', { name: /assessment team members/i }) as HTMLInputElement;
     const addButton = screen.getByRole('button', { name: /add team member/i });
     
     await fireEvent.input(input, { target: { value: 'John Doe' } });
@@ -54,7 +56,7 @@ describe('OrganizationInfo Component', () => {
   it('adds assessor on Enter key', async () => {
     render(OrganizationInfo);
     
-    const input = screen.getByLabelText(/assessment team members/i) as HTMLInputElement;
+    const input = screen.getByRole('textbox', { name: /assessment team members/i }) as HTMLInputElement;
     
     await fireEvent.input(input, { target: { value: 'Jane Smith' } });
     await fireEvent.keyPress(input, { key: 'Enter', code: 'Enter' });
@@ -65,7 +67,7 @@ describe('OrganizationInfo Component', () => {
   it('removes assessor from list', async () => {
     render(OrganizationInfo);
     
-    const input = screen.getByLabelText(/assessment team members/i) as HTMLInputElement;
+    const input = screen.getByRole('textbox', { name: /assessment team members/i }) as HTMLInputElement;
     const addButton = screen.getByRole('button', { name: /add team member/i });
     
     // Add an assessor
@@ -88,7 +90,7 @@ describe('OrganizationInfo Component', () => {
     expect(section).toHaveAttribute('aria-labelledby', 'org-info-heading');
     
     // Check assessor input has describedby
-    const input = screen.getByLabelText(/assessment team members/i);
+    const input = screen.getByRole('textbox', { name: /assessment team members/i });
     expect(input).toHaveAttribute('aria-describedby', 'assessor-help');
     
     // Check help text exists
@@ -98,7 +100,7 @@ describe('OrganizationInfo Component', () => {
   it('has accessible list for assessors', async () => {
     render(OrganizationInfo);
     
-    const input = screen.getByLabelText(/assessment team members/i) as HTMLInputElement;
+    const input = screen.getByRole('textbox', { name: /assessment team members/i }) as HTMLInputElement;
     const addButton = screen.getByRole('button', { name: /add team member/i });
     
     await fireEvent.input(input, { target: { value: 'User 1' } });

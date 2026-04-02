@@ -147,7 +147,7 @@ describe('Assessment Store', () => {
       store.setMaturityLevel(dimensionId, 'Launch');
       
       // Check localStorage
-      const saved = localStorage.getItem('w3c-maturity-assessment');
+      const saved = localStorage.getItem('a11y-assessment');
       expect(saved).toBeTruthy();
       
       const parsed = JSON.parse(saved!);
