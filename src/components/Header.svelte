@@ -148,12 +148,12 @@
   }
 
   .btn-secondary {
-    background-color: #3498db;
+    background-color: #2471a3;
     color: white;
   }
 
   .btn-secondary:hover {
-    background-color: #2980b9;
+    background-color: #1a5c8a;
     transform: translateY(-1px);
   }
 
