@@ -24,7 +24,7 @@
     "svelte": "^5.55.1",
     "svelte-check": "^4.4.6",
     "typescript": "~6.0.2",
-    "vite": "^8.0.5",
+    "vite": "^8.0.8",
     "vitest": "^4.0.18",
     "sharp": "^0.34.5",
     "@resvg/resvg-js": "^2.6.2"
