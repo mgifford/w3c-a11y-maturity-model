@@ -116,7 +116,7 @@ npm run test:ui    # Run with UI
 ## 📖 Documentation
 
 - [WCAG_COMPLIANCE.md](./WCAG_COMPLIANCE.md) - Accessibility compliance details
-- [ACCESSIBILITY_FIXES.md](./ACCESSIBILITY_FIXES.md) - Accessibility audit results
+- [ACCESSIBILITY.md](./ACCESSIBILITY.md) - Accessibility commitment and audit log
 
 ## 🛠️ Tech Stack
 
@@ -134,7 +134,7 @@ This project uses AI tools during development. No AI runs at runtime — the dep
 
 | AI Tool | Used For |
 |---------|----------|
-| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, adding comprehensive test coverage (including new component tests, data integrity tests, and accessibility tests), and generating documentation across multiple pull requests |
+| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, adding comprehensive test coverage (including new component tests, data integrity tests, and accessibility tests), and generating documentation across multiple pull requests. Also used to implement dark/light mode toggle with accessibility-compliant theme switching, and to replace ACCESSIBILITY_FIXES.md with ACCESSIBILITY.md. |
 
 ### Is AI used when running the program?
 

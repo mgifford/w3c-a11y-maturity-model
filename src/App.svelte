@@ -94,14 +94,14 @@
   }
 
   .footer {
-    background-color: #2c3e50;
-    color: #ecf0f1;
+    background-color: var(--color-footer-bg);
+    color: var(--color-footer-text);
     padding: 2rem 0;
     margin-top: 4rem;
   }
 
   .footer a {
-    color: #3498db;
+    color: var(--color-link);
   }
 
   .footer p {
