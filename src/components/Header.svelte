@@ -1,11 +1,17 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { assessmentStore, hasContent } from '../stores/assessmentStore';
+  import { themeStore } from '../stores/themeStore';
   import SocialShare from './SocialShare.svelte';
   import LogoUrl from '../assets/accessibility-maturity-model-logo.svg';
 
   let shareOpen = false;
   function toggleShare() { shareOpen = !shareOpen; }
   function closeShare() { shareOpen = false; }
+
+  onMount(() => {
+    themeStore.init();
+  });
 
   function handleReset() {
     if (confirm('Are you sure you want to start a new assessment? This will clear all current data.')) {
@@ -62,6 +68,13 @@
       </div>
     </div>
     <nav class="header-actions" aria-label="Main actions">
+      <button 
+        on:click={themeStore.toggle} 
+        class="btn btn-theme-toggle"
+        aria-label={$themeStore === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={$themeStore === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+        <span aria-hidden="true">{$themeStore === 'dark' ? '☀️' : '🌙'}</span>
+      </button>
       <button on:click={handleExport} class="btn btn-secondary" title="Export assessment data">
         <span aria-hidden="true">📥</span> Export
       </button>
@@ -90,8 +103,8 @@
 
 <style>
   .header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--color-header-bg-start) 0%, var(--color-header-bg-end) 100%);
+    color: var(--color-header-text);
     padding: 2rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
@@ -148,22 +161,42 @@
   }
 
   .btn-secondary {
-    background-color: #2471a3;
+    background-color: var(--color-btn-secondary-bg);
     color: white;
   }
 
   .btn-secondary:hover {
-    background-color: #1a5c8a;
+    background-color: var(--color-btn-secondary-hover);
     transform: translateY(-1px);
   }
 
   .btn-danger {
-    background-color: #e74c3c;
+    background-color: var(--color-btn-danger-bg);
     color: white;
   }
 
   .btn-danger:hover {
-    background-color: #c0392b;
+    background-color: var(--color-btn-danger-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-theme-toggle {
+    background-color: transparent;
+    color: var(--color-header-text);
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-left: auto;
+  }
+
+  .btn-theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #ffffff;
     transform: translateY(-1px);
   }
 
