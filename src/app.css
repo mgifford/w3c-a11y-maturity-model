@@ -16,8 +16,6 @@
   --color-btn-secondary-hover: #1a5c8a;
   --color-btn-danger-bg: #e74c3c;
   --color-btn-danger-hover: #c0392b;
-  --color-toggle-bg: #2471a3;
-  --color-toggle-hover: #1a5c8a;
 }
 
 [data-theme="dark"] {
@@ -37,8 +35,6 @@
   --color-btn-secondary-hover: #3a8fcc;
   --color-btn-danger-bg: #c0392b;
   --color-btn-danger-hover: #e74c3c;
-  --color-toggle-bg: #2471a3;
-  --color-toggle-hover: #3a8fcc;
 }
 
 :root {

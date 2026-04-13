@@ -183,7 +183,7 @@
   .btn-theme-toggle {
     background-color: transparent;
     color: var(--color-header-text);
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.75);
     padding: 0.5rem;
     min-width: 44px;
     min-height: 44px;
@@ -195,8 +195,8 @@
   }
 
   .btn-theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #ffffff;
     transform: translateY(-1px);
   }
 
