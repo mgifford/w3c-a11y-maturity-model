@@ -164,12 +164,12 @@
   }
 
   .btn-add {
-    background-color: #27ae60;
+    background-color: #1a7a40;
     color: white;
   }
 
   .btn-add:hover {
-    background-color: #229954;
+    background-color: #155d30;
   }
 
   .help-text {
