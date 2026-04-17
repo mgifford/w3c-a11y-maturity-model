@@ -88,6 +88,33 @@ describe('WCAG color contrast - Summary btn-primary and btn-secondary', () => {
   });
 });
 
+describe('WCAG color contrast - OrganizationInfo btn-add', () => {
+  const WHITE = '#ffffff';
+  // Colors used by .btn-add in OrganizationInfo.svelte
+  const BTN_ADD_BG = '#1a7a40';
+  const BTN_ADD_HOVER_BG = '#155d30';
+
+  it('btn-add background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_ADD_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('btn-add hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    const ratio = contrastRatio(BTN_ADD_HOVER_BG, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('old btn-add color #27ae60 fails contrast (documents the regression it prevents)', () => {
+    const oldRatio = contrastRatio('#27ae60', WHITE);
+    expect(oldRatio).toBeLessThan(4.5);
+  });
+
+  it('old btn-add hover color #229954 fails contrast (documents the regression it prevents)', () => {
+    const oldRatio = contrastRatio('#229954', WHITE);
+    expect(oldRatio).toBeLessThan(4.5);
+  });
+});
+
 describe('WCAG color contrast - SocialShare btn-primary', () => {
   const WHITE = '#ffffff';
   // Colors used by .btn-primary in SocialShare.svelte
