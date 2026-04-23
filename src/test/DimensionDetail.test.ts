@@ -19,20 +19,39 @@ describe('DimensionDetail Component - Form Interactions', () => {
     expect(screen.getByRole('heading', { name: /^proof points$/i })).toBeInTheDocument();
   });
 
-  it('allows checking proof point checkbox', async () => {
+  it('allows setting proof point status to in-progress', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    // Find first checkbox
-    const checkboxes = screen.getAllByRole('checkbox');
-    expect(checkboxes.length).toBeGreaterThan(0);
+    // Find the first "In Progress" button
+    const inProgressButtons = screen.getAllByRole('button', { name: /mark as in progress/i });
+    expect(inProgressButtons.length).toBeGreaterThan(0);
     
-    const firstCheckbox = checkboxes[0] as HTMLInputElement;
-    expect(firstCheckbox.checked).toBe(false);
+    await fireEvent.click(inProgressButtons[0]);
     
-    await fireEvent.click(firstCheckbox);
+    // Button should show pressed state
+    expect(inProgressButtons[0]).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('allows setting proof point status to planned', async () => {
+    render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    // Check should be updated (via store)
-    expect(firstCheckbox.checked).toBe(true);
+    const plannedButtons = screen.getAllByRole('button', { name: /mark as planned/i });
+    expect(plannedButtons.length).toBeGreaterThan(0);
+    
+    await fireEvent.click(plannedButtons[0]);
+    
+    expect(plannedButtons[0]).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('allows setting proof point status to completed', async () => {
+    render(DimensionDetail, { props: { dimensionId: 'communications' } });
+    
+    const completedButtons = screen.getAllByRole('button', { name: /mark as completed/i });
+    expect(completedButtons.length).toBeGreaterThan(0);
+    
+    await fireEvent.click(completedButtons[0]);
+    
+    expect(completedButtons[0]).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('allows selecting maturity level', async () => {
@@ -64,35 +83,34 @@ describe('DimensionDetail Component - Form Interactions', () => {
     expect(firstNAButton).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('disables checkbox when marked not applicable', async () => {
+  it('disables status buttons when marked not applicable', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const checkboxes = screen.getAllByRole('checkbox');
+    const inProgressButtons = screen.getAllByRole('button', { name: /mark as in progress/i });
     const naButtons = screen.getAllByTitle(/mark as not applicable/i);
     
-    const firstCheckbox = checkboxes[0] as HTMLInputElement;
+    const firstInProgressButton = inProgressButtons[0] as HTMLButtonElement;
     const firstNAButton = naButtons[0];
     
-    expect(firstCheckbox.disabled).toBe(false);
+    expect(firstInProgressButton.disabled).toBe(false);
     
     await fireEvent.click(firstNAButton);
     
-    // Checkbox should now be disabled
-    expect(firstCheckbox.disabled).toBe(true);
+    // Status buttons should now be disabled
+    expect(firstInProgressButton.disabled).toBe(true);
   });
 
   it('shows evidence textarea when proof point is completed', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const checkboxes = screen.getAllByRole('checkbox');
-    const firstCheckbox = checkboxes[0];
+    const completedButtons = screen.getAllByRole('button', { name: /mark as completed/i });
     
     // Initially no evidence textarea visible
     let evidenceTextareas = screen.queryAllByRole('textbox', { name: /evidence/i });
     const initialCount = evidenceTextareas.length;
     
-    // Check the proof point
-    await fireEvent.click(firstCheckbox);
+    // Mark the first proof point as completed
+    await fireEvent.click(completedButtons[0]);
     
     // Evidence textarea should now be visible
     evidenceTextareas = screen.queryAllByRole('textbox', { name: /evidence/i });
@@ -102,9 +120,9 @@ describe('DimensionDetail Component - Form Interactions', () => {
   it('allows entering evidence text', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    // Check first proof point
-    const checkboxes = screen.getAllByRole('checkbox');
-    await fireEvent.click(checkboxes[0]);
+    // Mark first proof point as completed
+    const completedButtons = screen.getAllByRole('button', { name: /mark as completed/i });
+    await fireEvent.click(completedButtons[0]);
     
     // Find evidence textarea
     const evidenceTextareas = screen.getAllByRole('textbox', { name: /evidence/i });
@@ -154,21 +172,21 @@ describe('DimensionDetail Component - Form Interactions', () => {
     expect(maturityGroup).toHaveAttribute('aria-labelledby', 'maturity-heading');
   });
 
-  it('proof point checkboxes have descriptions', () => {
+  it('status button groups have accessible labels', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const checkboxes = screen.getAllByRole('checkbox');
-    
-    // Each checkbox should have aria-describedby
-    checkboxes.forEach(checkbox => {
-      expect(checkbox).toHaveAttribute('aria-describedby');
+    // Each status button group should have aria-label
+    const statusGroups = screen.getAllByRole('group', { name: /status for:/i });
+    expect(statusGroups.length).toBeGreaterThan(0);
+    statusGroups.forEach(group => {
+      expect(group).toHaveAttribute('aria-label');
     });
   });
 
   it('displays help text for proof points', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    expect(screen.getByText(/check off proof points that your organization has completed/i)).toBeInTheDocument();
+    expect(screen.getByText(/set the status of each proof point/i)).toBeInTheDocument();
   });
 
   it('N/A button has proper ARIA attributes', () => {

@@ -13,10 +13,12 @@
   // Calculate proof point progress
   $: proofPointStats = (() => {
     const dimensions = $assessmentStore.dimensions;
-    if (!dimensions) return { completed: 0, total: 0, percentage: 0, applicable: 0 };
+    if (!dimensions) return { completed: 0, inProgress: 0, planned: 0, total: 0, percentage: 0, applicable: 0 };
     
     let total = 0;
     let completed = 0;
+    let inProgress = 0;
+    let planned = 0;
     let applicable = 0;
     
     dimensions.forEach(dim => {
@@ -24,13 +26,17 @@
         if (!pp.notApplicable) {
           applicable++;
           total++;
-          if (pp.completed) completed++;
+          if (pp.status === 'completed') completed++;
+          else if (pp.status === 'in-progress') inProgress++;
+          else if (pp.status === 'planned') planned++;
         }
       });
     });
     
     return {
       completed,
+      inProgress,
+      planned,
       total,
       applicable,
       percentage: total > 0 ? (completed / total) * 100 : 0
@@ -51,6 +57,12 @@
       </p>
       <p class="progress-text proof-points" aria-live="polite">
         <strong>Proof Points:</strong> {proofPointStats.completed} of {proofPointStats.total} completed
+        {#if proofPointStats.inProgress > 0}
+          · <span class="stat-in-progress">{proofPointStats.inProgress} in progress</span>
+        {/if}
+        {#if proofPointStats.planned > 0}
+          · <span class="stat-planned">{proofPointStats.planned} planned</span>
+        {/if}
       </p>
     </div>
   </div>
@@ -117,6 +129,16 @@
 
   .progress-text strong {
     color: #2c3e50;
+  }
+
+  .stat-in-progress {
+    color: #92400e;
+    font-weight: 500;
+  }
+
+  .stat-planned {
+    color: #1e3a8a;
+    font-weight: 500;
   }
 
   .progress-section {

@@ -35,7 +35,7 @@
 
   function getCompletionInfo(dimension: Dimension) {
     const applicable = dimension.proofPoints.filter(p => !p.notApplicable);
-    const completed = applicable.filter(p => p.completed);
+    const completed = applicable.filter(p => p.status === 'completed');
     return { completed: completed.length, total: applicable.length };
   }
 </script>
