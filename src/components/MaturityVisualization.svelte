@@ -13,14 +13,16 @@
   }
 
   // Get color for maturity level
+  // Colors are darkened to meet WCAG 2.1 AA contrast (≥4.5:1) against both white text
+  // (badge backgrounds) and light backgrounds such as #f8f9fa (text labels).
   function getColor(level: MaturityLevel | null): string {
-    if (!level) return '#e0e0e0';
+    if (!level) return '#455a64';
     switch(level) {
-      case 'Inactive': return '#f44336';
-      case 'Launch': return '#ff9800';
-      case 'Integrate': return '#2196f3';
-      case 'Optimize': return '#4caf50';
-      default: return '#e0e0e0';
+      case 'inactive': return '#c62828';
+      case 'launch': return '#b45309';
+      case 'integrate': return '#1565c0';
+      case 'optimize': return '#2e7d32';
+      default: return '#455a64';
     }
   }
 
@@ -86,10 +88,10 @@
   $: stats = dimensions ? {
     total: dimensions.length,
     assessed: dimensions.filter(d => d.maturityLevel).length,
-    inactive: dimensions.filter(d => d.maturityLevel === 'Inactive').length,
-    launch: dimensions.filter(d => d.maturityLevel === 'Launch').length,
-    integrate: dimensions.filter(d => d.maturityLevel === 'Integrate').length,
-    optimize: dimensions.filter(d => d.maturityLevel === 'Optimize').length,
+    inactive: dimensions.filter(d => d.maturityLevel === 'inactive').length,
+    launch: dimensions.filter(d => d.maturityLevel === 'launch').length,
+    integrate: dimensions.filter(d => d.maturityLevel === 'integrate').length,
+    optimize: dimensions.filter(d => d.maturityLevel === 'optimize').length,
     avgMaturity: dimensions.filter(d => d.maturityLevel).length > 0
       ? (dimensions.reduce((sum, d) => sum + getMaturityValue(d.maturityLevel), 0) / dimensions.filter(d => d.maturityLevel).length).toFixed(1)
       : '0.0'
@@ -135,7 +137,7 @@
       <p class="section-description">Visual representation of your organization's accessibility maturity levels</p>
       <div class="staircase-container">
         {#each MATURITY_LEVELS as level, index}
-          {@const count = stats[level.level.toLowerCase()]}
+          {@const count = stats[level.level]}
           {@const height = 60 + (index * 40)}
           <div class="staircase-step" style="height: {height}px;">
             <div class="step-content" style="background-color: {getColor(level.level)};">
@@ -154,7 +156,7 @@
     <h3>Maturity Level Distribution</h3>
     <div class="distribution-bars">
       {#each MATURITY_LEVELS as level}
-        {@const count = stats[level.level.toLowerCase()]}
+        {@const count = stats[level.level]}
         {@const percentage = stats.assessed > 0 ? (count / stats.assessed) * 100 : 0}
         <div class="distribution-item">
           <div class="distribution-label">
@@ -256,16 +258,16 @@
       </div>
       <div class="legend">
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #f44336"></span> Inactive (1)
+          <span class="legend-marker" style="background-color: #c62828"></span> Inactive (1)
         </div>
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #ff9800"></span> Launch (2)
+          <span class="legend-marker" style="background-color: #b45309"></span> Launch (2)
         </div>
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #2196f3"></span> Integrate (3)
+          <span class="legend-marker" style="background-color: #1565c0"></span> Integrate (3)
         </div>
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #4caf50"></span> Optimize (4)
+          <span class="legend-marker" style="background-color: #2e7d32"></span> Optimize (4)
         </div>
       </div>
     </div>
