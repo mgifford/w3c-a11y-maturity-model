@@ -75,7 +75,7 @@
 
   // Calculate proof point statistics
   $: proofPointStats = dimensions ? {
-    completed: dimensions.reduce((sum, d) => sum + d.proofPoints.filter(pp => pp.completed && !pp.notApplicable).length, 0),
+    completed: dimensions.reduce((sum, d) => sum + d.proofPoints.filter(pp => pp.status === 'completed' && !pp.notApplicable).length, 0),
     total: dimensions.reduce((sum, d) => sum + d.proofPoints.filter(pp => !pp.notApplicable).length, 0)
   } : {
     completed: 0,
@@ -279,7 +279,7 @@
       {#each dimensions as dim}
         {@const value = getMaturityValue(dim.maturityLevel)}
         {@const maturityPercentage = (value / 4) * 100}
-        {@const proofPointsCompleted = dim.proofPoints.filter(pp => pp.completed && !pp.notApplicable).length}
+        {@const proofPointsCompleted = dim.proofPoints.filter(pp => pp.status === 'completed' && !pp.notApplicable).length}
         {@const proofPointsTotal = dim.proofPoints.filter(pp => !pp.notApplicable).length}
         {@const proofPointPercentage = proofPointsTotal > 0 ? (proofPointsCompleted / proofPointsTotal) * 100 : 0}
         

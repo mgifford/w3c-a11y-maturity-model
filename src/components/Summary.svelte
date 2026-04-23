@@ -70,7 +70,7 @@
 
   function getCompletedProofPoints(dimension: Dimension) {
     const applicable = dimension.proofPoints.filter(p => !p.notApplicable);
-    const completed = applicable.filter(p => p.completed);
+    const completed = applicable.filter(p => p.status === 'completed');
     return { completed: completed.length, total: applicable.length };
   }
 
@@ -195,7 +195,7 @@
           <div class="proof-points-detail">
             <h4>Completed Proof Points:</h4>
             <ul>
-              {#each dimension.proofPoints.filter(p => p.completed) as proofPoint}
+              {#each dimension.proofPoints.filter(p => p.status === 'completed') as proofPoint}
                 <li>
                   <strong>{proofPoint.category}:</strong> {proofPoint.description}
                   {#if proofPoint.evidence}
@@ -204,10 +204,32 @@
                 </li>
               {/each}
             </ul>
-            {#if dimension.proofPoints.filter(p => p.completed).length === 0}
+            {#if dimension.proofPoints.filter(p => p.status === 'completed').length === 0}
               <p class="no-items">No proof points completed yet.</p>
             {/if}
           </div>
+
+          {#if dimension.proofPoints.filter(p => p.status === 'in-progress').length > 0}
+            <div class="in-progress-list">
+              <h4>In Progress:</h4>
+              <ul>
+                {#each dimension.proofPoints.filter(p => p.status === 'in-progress') as proofPoint}
+                  <li>{proofPoint.category}: {proofPoint.description}</li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
+
+          {#if dimension.proofPoints.filter(p => p.status === 'planned').length > 0}
+            <div class="planned-list">
+              <h4>Planned:</h4>
+              <ul>
+                {#each dimension.proofPoints.filter(p => p.status === 'planned') as proofPoint}
+                  <li>{proofPoint.category}: {proofPoint.description}</li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
 
           {#if dimension.proofPoints.filter(p => p.notApplicable).length > 0}
             <div class="not-applicable-list">
@@ -510,6 +532,30 @@
 
   .not-applicable-list li {
     color: #7f8c8d;
+  }
+
+  .in-progress-list {
+    margin-top: 1rem;
+  }
+
+  .in-progress-list h4 {
+    color: #92400e;
+  }
+
+  .in-progress-list li {
+    color: #78350f;
+  }
+
+  .planned-list {
+    margin-top: 1rem;
+  }
+
+  .planned-list h4 {
+    color: #1e3a8a;
+  }
+
+  .planned-list li {
+    color: #1e40af;
   }
 
   .overall-notes {

@@ -1,10 +1,12 @@
 export type MaturityLevel = 'inactive' | 'launch' | 'integrate' | 'optimize';
 
+export type ProofPointStatus = 'not-started' | 'planned' | 'in-progress' | 'completed';
+
 export interface ProofPoint {
   id: string;
   category: string;
   description: string;
-  completed: boolean;
+  status: ProofPointStatus;
   evidence: string;
   notApplicable: boolean;
 }

@@ -2,7 +2,7 @@
   import { assessmentStore } from '../stores/assessmentStore';
   import { createEventDispatcher } from 'svelte';
   import { MATURITY_LEVELS } from '../types';
-  import type { Dimension, MaturityLevel } from '../types';
+  import type { Dimension, MaturityLevel, ProofPointStatus } from '../types';
 
   export let dimensionId: string;
 
@@ -24,8 +24,11 @@
     }
   });
 
-  function toggleProofPoint(proofPointId: string) {
-    assessmentStore.toggleProofPoint(dimensionId, proofPointId);
+  function setProofPointStatus(proofPointId: string, newStatus: ProofPointStatus) {
+    // Clicking the already-active status button resets to 'not-started'
+    const proofPoint = dimension?.proofPoints.find(p => p.id === proofPointId);
+    const nextStatus: ProofPointStatus = proofPoint?.status === newStatus ? 'not-started' : newStatus;
+    assessmentStore.setProofPointStatus(dimensionId, proofPointId, nextStatus);
   }
 
   function toggleNotApplicable(proofPointId: string) {
@@ -52,9 +55,15 @@
     if (!dimension) return 0;
     const applicable = dimension.proofPoints.filter(p => !p.notApplicable);
     if (applicable.length === 0) return 0;
-    const completed = applicable.filter(p => p.completed).length;
+    const completed = applicable.filter(p => p.status === 'completed').length;
     return (completed / applicable.length) * 100;
   }
+
+  const STATUS_CONFIG: { value: ProofPointStatus; label: string; ariaLabel: string }[] = [
+    { value: 'planned',     label: 'Planned',     ariaLabel: 'Mark as planned' },
+    { value: 'in-progress', label: 'In Progress', ariaLabel: 'Mark as in progress' },
+    { value: 'completed',   label: 'Completed',   ariaLabel: 'Mark as completed' },
+  ];
 </script>
 
 {#if dimension}
@@ -102,7 +111,7 @@
     <div class="proof-points-section">
       <h3>Proof Points</h3>
       <p class="help-text">
-        Check off proof points that your organization has completed. Mark items as "Not Applicable" if they don't apply.
+        Set the status of each proof point. Mark items as "Not Applicable" if they don't apply to your organization.
       </p>
 
       {#each Object.entries(groupedProofPoints) as [category, proofPoints]}
@@ -110,20 +119,11 @@
           <h4 class="category-heading">{category}</h4>
           <div class="proof-points-list">
             {#each proofPoints as proofPoint}
-              <div class="proof-point {proofPoint.notApplicable ? 'not-applicable' : ''}">
+              <div class="proof-point status-{proofPoint.status} {proofPoint.notApplicable ? 'not-applicable' : ''}">
                 <div class="proof-point-header">
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={proofPoint.completed}
-                      disabled={proofPoint.notApplicable}
-                      on:change={() => toggleProofPoint(proofPoint.id)}
-                      aria-describedby="desc-{proofPoint.id}"
-                    />
-                    <span id="desc-{proofPoint.id}" class="proof-point-text">
-                      {proofPoint.description}
-                    </span>
-                  </label>
+                  <span id="desc-{proofPoint.id}" class="proof-point-text">
+                    {proofPoint.description}
+                  </span>
                   <button
                     on:click={() => toggleNotApplicable(proofPoint.id)}
                     class="btn-na {proofPoint.notApplicable ? 'active' : ''}"
@@ -133,7 +133,24 @@
                     N/A
                   </button>
                 </div>
-                {#if proofPoint.completed && !proofPoint.notApplicable}
+                <div
+                  class="status-buttons"
+                  role="group"
+                  aria-label="Status for: {proofPoint.description}"
+                >
+                  {#each STATUS_CONFIG as cfg}
+                    <button
+                      class="btn-status btn-status--{cfg.value} {proofPoint.status === cfg.value ? 'active' : ''}"
+                      on:click={() => setProofPointStatus(proofPoint.id, cfg.value)}
+                      aria-pressed={proofPoint.status === cfg.value}
+                      aria-label="{cfg.ariaLabel}"
+                      disabled={proofPoint.notApplicable}
+                    >
+                      {cfg.label}
+                    </button>
+                  {/each}
+                </div>
+                {#if proofPoint.status === 'completed' && !proofPoint.notApplicable}
                   <div class="evidence-section">
                     <label for="evidence-{proofPoint.id}" class="evidence-label">
                       Evidence/Documentation:
@@ -352,7 +369,7 @@
     border: 1px solid #ddd;
     border-radius: 6px;
     background-color: white;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, border-color 0.2s;
   }
 
   .proof-point:hover {
@@ -364,32 +381,96 @@
     background-color: #f8f9fa;
   }
 
+  /* Subtle left-border tint per status */
+  .proof-point.status-planned {
+    border-left: 4px solid #3b82f6;
+  }
+
+  .proof-point.status-in-progress {
+    border-left: 4px solid #f59e0b;
+  }
+
+  .proof-point.status-completed {
+    border-left: 4px solid #22c55e;
+  }
+
   .proof-point-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
-  }
-
-  .checkbox-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    cursor: pointer;
-    flex: 1;
-  }
-
-  .checkbox-label input[type="checkbox"] {
-    margin-top: 0.25rem;
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
+    margin-bottom: 0.75rem;
   }
 
   .proof-point-text {
     flex: 1;
     line-height: 1.5;
     color: #2c3e50;
+  }
+
+  /* Status buttons row */
+  .status-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .btn-status {
+    padding: 0.3rem 0.875rem;
+    border: 2px solid #cbd5e1;
+    background-color: white;
+    color: #475569;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-status:hover:not(:disabled) {
+    border-color: #94a3b8;
+    background-color: #f1f5f9;
+  }
+
+  .btn-status:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Planned – blue */
+  .btn-status--planned.active {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+  }
+
+  .btn-status--planned:hover:not(:disabled):not(.active) {
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+
+  /* In Progress – amber */
+  .btn-status--in-progress.active {
+    background-color: #f59e0b;
+    border-color: #f59e0b;
+    color: white;
+  }
+
+  .btn-status--in-progress:hover:not(:disabled):not(.active) {
+    border-color: #f59e0b;
+    color: #92400e;
+  }
+
+  /* Completed – green */
+  .btn-status--completed.active {
+    background-color: #22c55e;
+    border-color: #22c55e;
+    color: white;
+  }
+
+  .btn-status--completed:hover:not(:disabled):not(.active) {
+    border-color: #22c55e;
+    color: #14532d;
   }
 
   .btn-na {

@@ -47,16 +47,16 @@ describe('Assessment Store', () => {
       const dimension = state.dimensions[0];
       const proofPoint = dimension.proofPoints[0];
       
-      expect(proofPoint.completed).toBe(false);
+      expect(proofPoint.status).toBe('not-started');
       
       store.toggleProofPoint(dimension.id, proofPoint.id);
       
       const updatedState = get(store);
       const updatedProofPoint = updatedState.dimensions[0].proofPoints[0];
-      expect(updatedProofPoint.completed).toBe(true);
+      expect(updatedProofPoint.status).toBe('completed');
     });
 
-    it('should toggle proof point back to uncompleted', () => {
+    it('should toggle proof point back to not-started', () => {
       const state = get(store);
       const dimensionId = state.dimensions[0].id;
       const proofPointId = state.dimensions[0].proofPoints[0].id;
@@ -66,7 +66,31 @@ describe('Assessment Store', () => {
       
       const updatedState = get(store);
       const proofPoint = updatedState.dimensions[0].proofPoints[0];
-      expect(proofPoint.completed).toBe(false);
+      expect(proofPoint.status).toBe('not-started');
+    });
+
+    it('should set proof point status to planned', () => {
+      const state = get(store);
+      const dimensionId = state.dimensions[0].id;
+      const proofPointId = state.dimensions[0].proofPoints[0].id;
+
+      store.setProofPointStatus(dimensionId, proofPointId, 'planned');
+
+      const updatedState = get(store);
+      const proofPoint = updatedState.dimensions[0].proofPoints[0];
+      expect(proofPoint.status).toBe('planned');
+    });
+
+    it('should set proof point status to in-progress', () => {
+      const state = get(store);
+      const dimensionId = state.dimensions[0].id;
+      const proofPointId = state.dimensions[0].proofPoints[0].id;
+
+      store.setProofPointStatus(dimensionId, proofPointId, 'in-progress');
+
+      const updatedState = get(store);
+      const proofPoint = updatedState.dimensions[0].proofPoints[0];
+      expect(proofPoint.status).toBe('in-progress');
     });
 
     it('should toggle not applicable status', () => {
@@ -81,19 +105,19 @@ describe('Assessment Store', () => {
       expect(proofPoint.notApplicable).toBe(true);
     });
 
-    it('should uncheck completed when marked not applicable', () => {
+    it('should reset status to not-started when marked not applicable', () => {
       const state = get(store);
       const dimensionId = state.dimensions[0].id;
       const proofPointId = state.dimensions[0].proofPoints[0].id;
       
-      // First complete it
+      // First mark as completed
       store.toggleProofPoint(dimensionId, proofPointId);
       // Then mark as N/A
       store.toggleNotApplicable(dimensionId, proofPointId);
       
       const updatedState = get(store);
       const proofPoint = updatedState.dimensions[0].proofPoints[0];
-      expect(proofPoint.completed).toBe(false);
+      expect(proofPoint.status).toBe('not-started');
       expect(proofPoint.notApplicable).toBe(true);
     });
 
@@ -167,7 +191,7 @@ describe('Assessment Store', () => {
       
       expect(newState.organizationName).toBe('Loaded Org');
       expect(newState.assessors).toEqual(['User1', 'User2']);
-      expect(newState.dimensions[0].proofPoints[0].completed).toBe(true);
+      expect(newState.dimensions[0].proofPoints[0].status).toBe('completed');
     });
 
     it('should export assessment data', () => {
@@ -206,7 +230,7 @@ describe('Assessment Store', () => {
       const resetState = get(store);
       expect(resetState.organizationName).toBe('');
       expect(resetState.assessors).toEqual([]);
-      expect(resetState.dimensions[0].proofPoints[0].completed).toBe(false);
+      expect(resetState.dimensions[0].proofPoints[0].status).toBe('not-started');
     });
   });
 

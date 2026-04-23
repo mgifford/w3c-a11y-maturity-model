@@ -54,17 +54,17 @@ describe('dimensionsData - Data Structure Integrity', () => {
         expect(pp.id).toBeTruthy();
         expect(pp.category).toBeTruthy();
         expect(pp.description).toBeTruthy();
-        expect(typeof pp.completed).toBe('boolean');
+        expect(typeof pp.status).toBe('string');
         expect(typeof pp.evidence).toBe('string');
         expect(typeof pp.notApplicable).toBe('boolean');
       });
     });
   });
 
-  it('all proof points start uncompleted and applicable', () => {
+  it('all proof points start with status not-started and applicable', () => {
     initialDimensions.forEach(dim => {
       dim.proofPoints.forEach(pp => {
-        expect(pp.completed).toBe(false);
+        expect(pp.status).toBe('not-started');
         expect(pp.notApplicable).toBe(false);
         expect(pp.evidence).toBe('');
       });
