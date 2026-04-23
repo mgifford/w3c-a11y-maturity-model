@@ -152,3 +152,99 @@ describe('WCAG color contrast - muted text color (#595959)', () => {
     expect(oldRatio).toBeLessThan(4.5);
   });
 });
+
+describe('WCAG color contrast - maturity level badge/text colors', () => {
+  const WHITE = '#ffffff';
+  // Light background used in dimension bar items in MaturityVisualization
+  const LIGHT_CARD_BG = '#f8f9fa';
+
+  // Accessible maturity level colors used in MaturityVisualization, DimensionList, Summary
+  const INACTIVE_COLOR = '#c62828';
+  const LAUNCH_COLOR = '#b45309';
+  const INTEGRATE_COLOR = '#1565c0';
+  const OPTIMIZE_COLOR = '#2e7d32';
+  const NOT_ASSESSED_COLOR = '#455a64';
+
+  it('inactive color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
+    expect(contrastRatio(INACTIVE_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('launch color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
+    expect(contrastRatio(LAUNCH_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('integrate color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
+    expect(contrastRatio(INTEGRATE_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('optimize color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
+    expect(contrastRatio(OPTIMIZE_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('not-assessed color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
+    expect(contrastRatio(NOT_ASSESSED_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('inactive color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
+    expect(contrastRatio(INACTIVE_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('launch color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
+    expect(contrastRatio(LAUNCH_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('integrate color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
+    expect(contrastRatio(INTEGRATE_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('optimize color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
+    expect(contrastRatio(OPTIMIZE_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('not-assessed color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
+    expect(contrastRatio(NOT_ASSESSED_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  // Document that old colors failed
+  it('old not-assessed color #95a5a6 fails WCAG 2.1 AA contrast with white text', () => {
+    expect(contrastRatio('#95a5a6', WHITE)).toBeLessThan(4.5);
+  });
+
+  it('old not-assessed color #e0e0e0 fails WCAG 2.1 AA contrast with white text', () => {
+    expect(contrastRatio('#e0e0e0', WHITE)).toBeLessThan(4.5);
+  });
+
+  it('old inactive color #e74c3c fails WCAG 2.1 AA contrast with white text', () => {
+    expect(contrastRatio('#e74c3c', WHITE)).toBeLessThan(4.5);
+  });
+
+  it('old launch color #f39c12 fails WCAG 2.1 AA contrast with white text', () => {
+    expect(contrastRatio('#f39c12', WHITE)).toBeLessThan(4.5);
+  });
+
+  it('old integrate color #3498db fails WCAG 2.1 AA contrast with white text', () => {
+    expect(contrastRatio('#3498db', WHITE)).toBeLessThan(4.5);
+  });
+
+  it('old optimize color #27ae60 fails WCAG 2.1 AA contrast with white text', () => {
+    expect(contrastRatio('#27ae60', WHITE)).toBeLessThan(4.5);
+  });
+});
+
+describe('WCAG color contrast - DimensionList btn-assess', () => {
+  const WHITE = '#ffffff';
+  const BTN_ASSESS_BG = '#1565c0';
+  const BTN_ASSESS_HOVER_BG = '#0d47a1';
+
+  it('btn-assess background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    expect(contrastRatio(BTN_ASSESS_BG, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('btn-assess hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
+    expect(contrastRatio(BTN_ASSESS_HOVER_BG, WHITE)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('old btn-assess color #3498db fails WCAG 2.1 AA contrast', () => {
+    expect(contrastRatio('#3498db', WHITE)).toBeLessThan(4.5);
+  });
+});

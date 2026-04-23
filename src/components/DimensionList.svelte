@@ -17,13 +17,13 @@
   }
 
   function getMaturityLevelColor(level: string | null) {
-    if (!level) return '#95a5a6';
+    if (!level) return '#455a64';
     switch (level) {
-      case 'inactive': return '#e74c3c';
-      case 'launch': return '#f39c12';
-      case 'integrate': return '#3498db';
-      case 'optimize': return '#27ae60';
-      default: return '#95a5a6';
+      case 'inactive': return '#c62828';
+      case 'launch': return '#b45309';
+      case 'integrate': return '#1565c0';
+      case 'optimize': return '#2e7d32';
+      default: return '#455a64';
     }
   }
 
@@ -224,12 +224,12 @@
   }
 
   .btn-assess {
-    background-color: #3498db;
+    background-color: #1565c0;
     color: white;
   }
 
   .btn-assess:hover {
-    background-color: #2980b9;
+    background-color: #0d47a1;
   }
 
   @media (max-width: 768px) {
