@@ -276,7 +276,7 @@
   }
 
   .help-text {
-    color: #7f8c8d;
+    color: #595959;
     margin-bottom: 1rem;
   }
 
@@ -396,7 +396,7 @@
     padding: 0.25rem 0.75rem;
     border: 1px solid #95a5a6;
     background-color: white;
-    color: #7f8c8d;
+    color: #595959;
     border-radius: 4px;
     font-size: 0.875rem;
     font-weight: 500;

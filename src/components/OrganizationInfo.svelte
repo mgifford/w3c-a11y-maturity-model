@@ -174,7 +174,7 @@
 
   .help-text {
     font-size: 0.875rem;
-    color: #7f8c8d;
+    color: #595959;
     margin-top: 0.5rem;
   }
 

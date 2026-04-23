@@ -109,7 +109,7 @@
   }
 
   .subtitle {
-    color: #7f8c8d;
+    color: #595959;
     margin-bottom: 2rem;
   }
 
@@ -192,7 +192,7 @@
   }
 
   .stat-label {
-    color: #7f8c8d;
+    color: #595959;
   }
 
   .stat-value {
