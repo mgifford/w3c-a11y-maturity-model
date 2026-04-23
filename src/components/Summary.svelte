@@ -324,7 +324,7 @@
 
   .info-label {
     font-weight: 600;
-    color: #7f8c8d;
+    color: #595959;
     font-size: 0.9rem;
   }
 
@@ -438,7 +438,7 @@
 
   .progress-text {
     font-size: 0.875rem;
-    color: #7f8c8d;
+    color: #595959;
   }
 
   .dimension-section {
@@ -496,7 +496,7 @@
   }
 
   .no-items {
-    color: #7f8c8d;
+    color: #595959;
     font-style: italic;
   }
 
@@ -505,11 +505,11 @@
   }
 
   .not-applicable-list h4 {
-    color: #7f8c8d;
+    color: #595959;
   }
 
   .not-applicable-list li {
-    color: #7f8c8d;
+    color: #595959;
   }
 
   .overall-notes {

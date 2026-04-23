@@ -130,3 +130,25 @@ describe('WCAG color contrast - SocialShare btn-primary', () => {
     expect(oldRatio).toBeLessThan(4.5);
   });
 });
+
+describe('WCAG color contrast - muted text color (#595959)', () => {
+  const WHITE = '#ffffff';
+  const LIGHT_BG = '#f5f7fa';
+  // New accessible muted text color used in help-text, subtitle, stat-label, etc.
+  const MUTED_TEXT = '#595959';
+
+  it('muted text color meets WCAG 2.1 AA normal text contrast on white (4.5:1)', () => {
+    const ratio = contrastRatio(MUTED_TEXT, WHITE);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('muted text color meets WCAG 2.1 AA normal text contrast on light background (4.5:1)', () => {
+    const ratio = contrastRatio(MUTED_TEXT, LIGHT_BG);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('old muted text color #7f8c8d fails WCAG 2.1 AA contrast on white (documents the regression it prevents)', () => {
+    const oldRatio = contrastRatio('#7f8c8d', WHITE);
+    expect(oldRatio).toBeLessThan(4.5);
+  });
+});
