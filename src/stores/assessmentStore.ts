@@ -9,7 +9,7 @@ function migrateProofPoint(pp: any): ProofPoint {
     id: pp.id,
     category: pp.category,
     description: pp.description,
-    status: pp.completed ? 'completed' : 'not-started' as ProofPointStatus,
+    status: pp.completed ? 'completed' : 'not-started',
     evidence: pp.evidence ?? '',
     notApplicable: pp.notApplicable ?? false
   };
