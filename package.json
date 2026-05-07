@@ -14,15 +14,15 @@
     "generate:favicon": "node scripts/generate-favicon.mjs"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@sveltejs/vite-plugin-svelte": "^7.1.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/svelte": "^5.3.1",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^25.6.0",
     "@vitest/ui": "^4.1.5",
-    "jsdom": "^29.0.2",
+    "jsdom": "^29.1.1",
     "svelte": "^5.55.4",
-    "svelte-check": "^4.4.6",
+    "svelte-check": "^4.4.8",
     "vite": "^8.0.10",
     "typescript": "~6.0.3",
     "vitest": "^4.0.18",
