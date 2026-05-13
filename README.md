@@ -134,7 +134,7 @@ This project uses AI tools during development. No AI runs at runtime — the dep
 
 | AI Tool | Used For |
 |---------|----------|
-| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, adding comprehensive test coverage (including new component tests, data integrity tests, and accessibility tests), and generating documentation across multiple pull requests. Also used to implement dark/light mode toggle with accessibility-compliant theme switching, replace ACCESSIBILITY_FIXES.md with ACCESSIBILITY.md, and draft `DEFINITION_OF_DONE.md`. Also used to resolve 27 WCAG color-contrast failures reported by Accessibility Insights: fixed a case-mismatch bug in `MaturityVisualization.svelte`'s `getColor()` function, updated maturity-level badge and text colors across `MaturityVisualization.svelte`, `DimensionList.svelte`, and `Summary.svelte` to meet WCAG 2.1 AA (4.5:1) contrast ratios, and added regression tests for all new accessible color values. |
+| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, adding comprehensive test coverage (including new component tests, data integrity tests, and accessibility tests), and generating documentation across multiple pull requests.<br><br>Also used to implement dark/light mode toggle with accessibility-compliant theme switching, replace ACCESSIBILITY_FIXES.md with ACCESSIBILITY.md, and draft `DEFINITION_OF_DONE.md`.<br><br>Also used to resolve 27 WCAG color-contrast failures reported by Accessibility Insights by fixing a case-mismatch bug in `MaturityVisualization.svelte`'s `getColor()` function, updating maturity-level badge and text colors across `MaturityVisualization.svelte`, `DimensionList.svelte`, and `Summary.svelte` to meet WCAG 2.1 AA (4.5:1) contrast ratios, and adding regression tests for the new accessible color values. |
 
 ### Is AI used when running the program?
 
@@ -161,4 +161,3 @@ No. The application does not use any browser-based AI APIs (e.g., WebLLM, window
 	- Update index.html to point og:image to ./social-card.png
 - Mastodon prompts for your instance domain on first use and remembers it.
 - All assets and links use relative paths to work under the GitHub Pages base path.
-
