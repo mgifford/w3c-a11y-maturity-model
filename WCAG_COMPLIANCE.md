@@ -12,7 +12,7 @@ Last updated: 2026-11-08.
 | Area | Status | How it was checked |
 | --- | --- | --- |
 | Colour contrast (text and UI) | Verified | Automated token tests (`src/test/colorContrast.test.ts`) for both themes |
-| Structure, names, roles, labels | Verified | axe-core on the rendered overview and a dimension view (`src/test/accessibility.test.ts`) |
+| Structure, names, roles, labels | Verified | axe-core on the About page, the assessment overview and a dimension view |
 | Keyboard operation | Not run | Code reviewed; run cases A1–A9 in [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md) |
 | Screen reader behaviour | Not run | Run cases B1–B7 with NVDA or VoiceOver |
 | Zoom / reflow to 200% and 320px | Not run | Run cases C1–C3 |
@@ -34,6 +34,8 @@ Last updated: 2026-11-08.
   which is wrapped in a keyboard-reachable scroll region.
 - Information supplied with CSS gradients is backed by solid token colours chosen so that the
   lightest point of each gradient still meets the text threshold.
+- The site's two pages (About and Assessment) are real files with their own titles; the About content
+  is not repeated on the assessment page.
 
 ### Operable
 

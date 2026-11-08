@@ -3,6 +3,13 @@
 An independent, static web tool for exploring the [Accessibility Maturity Model (AMM)](https://www.w3.org/TR/maturity-model/)
 and recording an organization's evidence against it.
 
+The site is two real pages, so each works as a file on GitHub Pages and can be linked directly:
+
+| Page | File | Purpose |
+| --- | --- | --- |
+| About | `index.html` | What the model covers, what this tool is and is not, and the link into the assessment |
+| Assessment | `tool.html` | Organization details, dimensions, proof points, summary and export |
+
 The AMM is published by the W3C Accessible Platform Architectures (APA) Working Group as a
 **W3C Group Note**. It is **not** a W3C Recommendation, and this tool is not a W3C product.
 
@@ -64,14 +71,15 @@ npm ci
 npm run dev
 ```
 
-Visit <http://localhost:5173>.
+Visit <http://localhost:5173> for the About page and <http://localhost:5173/tool.html> for the
+assessment.
 
 ### Scripts
 
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the Vite dev server |
-| `npm run build` | Build static files into `dist/` |
+| `npm run build` | Build both pages into `dist/` (`index.html`, `tool.html`) |
 | `npm run preview` | Preview the production build |
 | `npm run check` | Type-check Svelte and TypeScript (`svelte-check` + `tsc`) |
 | `npm test` | Run the test suite |
@@ -93,7 +101,7 @@ The suite covers:
   for both themes (`src/test/colorContrast.test.ts`)
 - **ARIA and structure** — axe-core against the rendered overview and a dimension view
   (`src/test/accessibility.test.ts`)
-- Component behaviour and store logic
+- Component behaviour and store logic, including the About page and its links into the tool
 - Manual procedure for what automation cannot cover: [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md)
 
 Automated checks do not replace manual review. Before merging a UI change, run
@@ -130,10 +138,11 @@ colours, so that both themes stay accessible; the contrast tests enforce this.
 
 The site is deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`.
 
-`vite.config.ts` sets the production base path to `/w3c-a11y-maturity-model/`; if the repository is
-renamed, update `base` there and the absolute `og:image` URLs in `index.html`.
+`vite.config.ts` sets the production base path to `/w3c-a11y-maturity-model/` and lists both HTML
+pages as build inputs. If the repository is renamed, update `base` there and the absolute URLs in
+`index.html` and `tool.html`.
 
-All links and assets use relative paths so the site works under the repository subpath. Everything
+All links and assets use relative paths so both pages work under the repository subpath. Everything
 is static: there is no server-side routing and no build step at request time.
 
 ## Keeping the content in sync
