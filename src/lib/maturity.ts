@@ -14,6 +14,10 @@ export const MODEL = {
   publisher: 'W3C Accessible Platform Architectures (APA) Working Group',
   url: 'https://www.w3.org/TR/maturity-model/',
   editorDraftUrl: 'https://w3c.github.io/maturity-model/',
+  spreadsheetUrl: 'https://w3c.github.io/maturity-model/AssessmentTool.xlsx',
+  repoUrl: 'https://github.com/w3c/maturity-model',
+  issuesUrl: 'https://github.com/w3c/maturity-model/issues',
+  workingGroupUrl: 'https://www.w3.org/groups/wg/apa/',
   /** Date of the latest editor's-draft change reflected in the content. */
   syncedThrough: '30 September 2026',
 } as const;

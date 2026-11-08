@@ -42,7 +42,7 @@ Last updated: 2026-11-08.
 - A skip link precedes the header.
 - All controls are native `<button>`, `<a>`, `<input>` and `<textarea>` elements.
 - Focus is visible everywhere (3px outline, 2px offset). On dark surfaces the ring switches to
-  white; inside the introduction it switches to white as well.
+  white.
 - The share panel moves focus to its first control when opened, closes on Escape, and returns focus
   to the Share button.
 - The theme toggle is last in the DOM and last visually, so focus order matches reading order.
@@ -56,8 +56,10 @@ Last updated: 2026-11-08.
   asterisk.
 - Errors and confirmations are announced in plain language through a status region. The reset action
   uses an inline confirmation with focus moved to the confirm button, not a browser dialog.
-- The introduction states what the model and this tool are and are not, including that the AMM is a
-  Group Note that is not endorsed by W3C.
+- The About page states what the model and this tool are and are not, including that the AMM is a
+  Group Note that is not endorsed by W3C, and that this tool is not a conformance claim. It links to
+  the Group Note, the editor's draft, the assessment spreadsheet, the model's repository and issue
+  tracker, and the APA Working Group.
 
 ### Robust
 
@@ -95,7 +97,7 @@ most recent at the top, and link an issue for every failure.
 | A8 Status buttons | Not run | |
 | A9 Table scroll region | Not run | |
 | B1 Landmarks and headings | Not run | |
-| B2 Introduction disclosure | Not run | |
+| B2 About page content | Not run | |
 | B3 Maturity badges | Not run | |
 | B4 Progress updates | Not run | |
 | B5 Radar chart | Not run | |

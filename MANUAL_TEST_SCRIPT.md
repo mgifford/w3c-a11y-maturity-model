@@ -88,8 +88,8 @@ Perform every case with the mouse physically out of reach.
    summary.
 2. Repeat with both themes.
 
-- **Expected:** every focused control has a clearly visible ring; on the dark header, introduction
-  and footer the ring is light, not dark-on-dark.
+- **Expected:** every focused control has a clearly visible ring; on the dark header and footer the
+  ring is light, not dark-on-dark.
 - **WCAG:** 2.4.7 Focus Visible, 1.4.11 Non-text Contrast.
 
 ### A4 — No keyboard trap
@@ -173,10 +173,11 @@ Say each expected announcement out loud (or note the actual output) as you go.
 1. Open the About page and read from the top.
 2. Follow "Start the assessment", then return with "About this tool".
 
-- **Expected:** the About page is a single page of prose with an `h1`, then `h2` for the hero, About
-  the AMM, the seven dimensions and the closing section; the disclosure is always visible, with no
-  collapse control.
-- **Expected:** both links move to the expected page, and each page has its own descriptive title.
+- **Expected:** the About page has an `h1`, then `h2` for the hero, "Start with the source", "About
+  this tool" and "What you'll assess". There are no nested disclosures.
+- **Expected:** the six source links (Group Note, editor's draft, assessment spreadsheet, source
+  repository, issues, APA Working Group) open in a new tab and each says so.
+- **Expected:** both tool links move to the assessment, and each page has its own descriptive title.
 - **Expected:** the assessment page does **not** repeat the About content.
 - **WCAG:** 2.4.4 Link Purpose, 3.2.3 Consistent Navigation.
 
@@ -359,7 +360,7 @@ Say each expected announcement out loud (or note the actual output) as you go.
 
 ### H1 — Link text
 
-1. Read each link out of context.
+1. Read each link out of context, on the About page and in the tool header/footer.
 
 - **Expected:** every link makes sense alone; external links say they open in a new tab.
 - **WCAG:** 2.4.4 Link Purpose, 2.4.6.
