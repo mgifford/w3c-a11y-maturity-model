@@ -94,8 +94,11 @@ The suite covers:
 - **ARIA and structure** — axe-core against the rendered overview and a dimension view
   (`src/test/accessibility.test.ts`)
 - Component behaviour and store logic
+- Manual procedure for what automation cannot cover: [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md)
 
-Automated checks do not replace manual review. Before merging a UI change:
+Automated checks do not replace manual review. Before merging a UI change, run
+[MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md) and record the results in
+[WCAG_COMPLIANCE.md](./WCAG_COMPLIANCE.md#manual-test-record). The short version:
 
 1. Navigate the primary controls with the keyboard only, including the skip link.
 2. Confirm focus is always visible, and that focus returns to the Share button when the share panel
