@@ -27,7 +27,8 @@ browser or screen reader is more valuable than a longer single pass.
    npm run preview
    ```
 
-   Use `http://localhost:4173/`. Do not test from `file://`.
+   The site has two pages: the About page at `http://localhost:4173/` and the assessment at
+   `http://localhost:4173/tool.html`. Do not test from `file://`.
 
 3. Have a second browser available for the cross-browser pass, and one screen reader:
    NVDA with Firefox or Chrome on Windows, or VoiceOver with Safari on macOS.
@@ -63,7 +64,7 @@ Perform every case with the mouse physically out of reach.
 
 ### A1 — Skip link
 
-1. Load the page in the overview.
+1. Load the assessment page (`tool.html`).
 2. Press `Tab` once.
 
 - **Expected:** "Skip to main content" appears at the top left with a visible focus ring.
@@ -73,17 +74,18 @@ Perform every case with the mouse physically out of reach.
 
 ### A2 — Tab order follows reading order
 
-1. Tab through the whole overview without using `Shift+Tab`.
+1. Tab through the whole assessment page without using `Shift+Tab`.
 
 - **Expected:** order is skip link → Export → Import → (New Assessment, if there is data) → Share →
-  theme toggle → organization fields → dimension cards.
+  About this tool → theme toggle → organization fields → dimension cards.
 - **Expected:** the theme toggle is last in the header both visually and in the tab order.
 - **Expected:** focus never jumps upwards or to a control you have already passed.
 - **WCAG:** 2.4.3 Focus Order.
 
 ### A3 — Focus is always visible
 
-1. Tab through every control on the overview, a dimension view, and the summary.
+1. Tab through every control on the About page, the assessment overview, a dimension view, and the
+   summary.
 2. Repeat with both themes.
 
 - **Expected:** every focused control has a clearly visible ring; on the dark header, introduction
@@ -149,11 +151,14 @@ Perform every case with the mouse physically out of reach.
 
 ## B. Screen reader
 
+Cases B1, B2 and B7 cover both pages; the rest apply to the assessment page.
+
 Say each expected announcement out loud (or note the actual output) as you go.
 
 ### B1 — Landmarks and headings
 
-1. Load the overview and use the screen reader's landmark and heading lists.
+1. Load the assessment overview and use the screen reader's landmark and heading lists.
+2. Repeat on the About page (`index.html`).
 
 - **Expected:** banner, main, contentinfo and at least one labelled group are present.
 - **Expected:** exactly one `h1` ("Accessibility Maturity Model"), then `h2` for About, Organization
@@ -163,14 +168,17 @@ Say each expected announcement out loud (or note the actual output) as you go.
 - **Expected:** no heading level is skipped going down.
 - **WCAG:** 1.3.1 Info and Relationships, 2.4.6 Headings and Labels.
 
-### B2 — Introduction disclosure
+### B2 — About page content
 
-1. Move to the "About the AMM" heading and activate the button inside it.
+1. Open the About page and read from the top.
+2. Follow "Start the assessment", then return with "About this tool".
 
-- **Expected:** the button is announced as "About the AMM, button, expanded" and collapsing says
-  "collapsed".
-- **Expected:** the heading is still reachable as a heading.
-- **WCAG:** 1.3.1, 4.1.2.
+- **Expected:** the About page is a single page of prose with an `h1`, then `h2` for the hero, About
+  the AMM, the seven dimensions and the closing section; the disclosure is always visible, with no
+  collapse control.
+- **Expected:** both links move to the expected page, and each page has its own descriptive title.
+- **Expected:** the assessment page does **not** repeat the About content.
+- **WCAG:** 2.4.4 Link Purpose, 3.2.3 Consistent Navigation.
 
 ### B3 — Maturity badges
 
@@ -190,7 +198,7 @@ Say each expected announcement out loud (or note the actual output) as you go.
 
 ### B5 — Radar chart
 
-1. In the overview, move to the maturity visualization.
+1. In the assessment overview, move to the maturity visualization.
 
 - **Expected:** the chart is announced as an image named "Maturity level by dimension" with a
   description listing each dimension and its level.
@@ -220,7 +228,7 @@ Say each expected announcement out loud (or note the actual output) as you go.
 ### C1 — 200% zoom
 
 1. Set browser zoom to 200% at a 1280px wide window.
-2. Visit the overview, a dimension view, and the summary.
+2. Visit the About page, the assessment overview, a dimension view, and the summary.
 
 - **Expected:** no horizontal scrolling except the summary table; nothing is clipped or overlapping;
   text is not truncated.
@@ -270,8 +278,8 @@ Say each expected announcement out loud (or note the actual output) as you go.
 
 1. In both themes, inspect body text, muted text, links, footer links, badge text and button labels.
 
-- **Expected:** nothing is washed out or invisible. Pay particular attention to the introduction
-  panel and the footer, which historically failed.
+- **Expected:** nothing is washed out or invisible. Pay particular attention to the About page
+  panel, the header and the footer, which historically failed.
 - **WCAG:** 1.4.3, 1.4.11.
 
 ### E2 — System preference is honoured
@@ -358,14 +366,14 @@ Say each expected announcement out loud (or note the actual output) as you go.
 
 ### H2 — Plain language
 
-1. Read the introduction and the "How to read this report" panel as if you were new to the model.
+1. Read the About page and the "How to read this report" panel as if you were new to the model.
 
 - **Expected:** no unexplained jargon; the difference between maturity and conformance is clear.
 - **WCAG:** 3.1.5 Reading Level (AAA, advisory here), 3.3.2.
 
 ### H3 — Honest framing
 
-1. Check the introduction and the footer.
+1. Check the About page and the footer.
 
 - **Expected:** the page states that this is an independent tool, that the AMM is a Group Note not
   endorsed by W3C, and that results are not a conformance claim or certification.

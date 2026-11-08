@@ -102,6 +102,22 @@ describe('Introduction Component', () => {
     expect(screen.getByText(/not a w3c recommendation or a standard/i)).toBeInTheDocument();
   });
 
+  it('discloses that the content also follows the editor\'s draft', () => {
+    render(Introduction);
+
+    expect(screen.getAllByText(/editor's draft/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/30 September 2026/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/goes beyond the Note/i)).toBeInTheDocument();
+  });
+
+  it('names where the tool differs from the published Group Note', () => {
+    render(Introduction);
+
+    expect(screen.getByText(/where this differs from the group note/i)).toBeInTheDocument();
+    expect(screen.getByText(/governance and oversight/i)).toBeInTheDocument();
+    expect(screen.getByText(/continuity additions/i)).toBeInTheDocument();
+  });
+
   it('describes four maturity levels, not five', () => {
     render(Introduction);
 
@@ -129,6 +145,21 @@ describe('Introduction Component', () => {
     expect(ols.length).toBeGreaterThan(0);
     const steps = ols[0].querySelectorAll('li');
     expect(steps.length).toBe(5);
+  });
+
+  it('can render as always-open page content', () => {
+    render(Introduction, { props: { toggleable: false } });
+
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: /about the amm/i })).toBeInTheDocument();
+    expect(screen.getByText(/adaptable framework for measuring how/i)).toBeInTheDocument();
+    expect(screen.getByText(/what this tool is, and is not/i)).toBeInTheDocument();
+  });
+
+  it('states that it was initially developed against the Group Note', () => {
+    render(Introduction);
+
+    expect(screen.getByText(/initially developed against that Group Note/i)).toBeInTheDocument();
   });
 
   it('uses a heading that contains the disclosure button', () => {

@@ -14,7 +14,8 @@ export const MODEL = {
   publisher: 'W3C Accessible Platform Architectures (APA) Working Group',
   url: 'https://www.w3.org/TR/maturity-model/',
   editorDraftUrl: 'https://w3c.github.io/maturity-model/',
-  syncedThrough: "editor's draft, 30 September 2026",
+  /** Date of the latest editor's-draft change reflected in the content. */
+  syncedThrough: '30 September 2026',
 } as const;
 
 /** Colour token for a maturity level, resolved through CSS custom properties. */

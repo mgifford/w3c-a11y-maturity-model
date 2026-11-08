@@ -1,6 +1,9 @@
 <script lang="ts">
   import { MODEL } from '../lib/maturity';
 
+  /** When false the content is always visible, for use as a page's main content. */
+  export let toggleable = true;
+
   let isExpanded = true;
 
   function toggleIntro() {
@@ -8,15 +11,24 @@
   }
 </script>
 
-<section class="introduction" aria-labelledby="intro-heading">
-  <h2 id="intro-heading">
-    <button class="intro-toggle" on:click={toggleIntro} aria-expanded={isExpanded} aria-controls="intro-content">
-      <span>About the {MODEL.acronym}</span>
-      <span class="toggle-icon" aria-hidden="true">{isExpanded ? '−' : '+'}</span>
-    </button>
-  </h2>
+<section class="introduction" class:always-open={!toggleable} aria-labelledby="intro-heading">
+  {#if toggleable}
+    <h2 id="intro-heading">
+      <button
+        class="intro-toggle"
+        on:click={toggleIntro}
+        aria-expanded={isExpanded}
+        aria-controls="intro-content"
+      >
+        <span>About the {MODEL.acronym}</span>
+        <span class="toggle-icon" aria-hidden="true">{isExpanded ? '−' : '+'}</span>
+      </button>
+    </h2>
+  {:else}
+    <h2 id="intro-heading" class="static-heading">About the {MODEL.acronym}</h2>
+  {/if}
 
-  {#if isExpanded}
+  {#if !toggleable || isExpanded}
     <div id="intro-content" class="intro-content">
       <p>
         The <strong>{MODEL.name} ({MODEL.acronym})</strong> is an adaptable framework for measuring how
@@ -30,8 +42,13 @@
         <p><strong>This tool is</strong></p>
         <ul>
           <li>
-            an independent, unaffiliated assessment aid built on the {MODEL.acronym}, published by the
+            an independent, unaffiliated assessment aid for the {MODEL.acronym}, published by the
             {' '}{MODEL.publisher} as a <strong>{MODEL.version}</strong>;
+          </li>
+          <li>
+            initially developed against that Group Note, and since updated with the model's
+            <strong>editor's draft</strong> changes published through <strong>{MODEL.syncedThrough}</strong>,
+            so some content now goes beyond the Note. The draft is not final and may change again;
           </li>
           <li>a structured way to discuss how your organization produces and sustains accessible outcomes.</li>
         </ul>
@@ -46,6 +63,11 @@
             complements accessibility conformance testing; it does not replace it.
           </li>
         </ul>
+        <p>
+          <strong>Where this differs from the Group Note:</strong> the tool follows the draft. &ldquo;Oversight
+          and Culture&rdquo; is shown as &ldquo;Governance and Oversight&rdquo; and is assessed second, and the proof
+          points include the draft's Continuity additions.
+        </p>
         <p>
           Results are informational and advisory. Final responsibility for interpretation,
           prioritization, and action rests with your organization and its accessibility experts.
@@ -92,7 +114,7 @@
       <div class="quick-start">
         <h3>Getting started</h3>
         <ol>
-          <li>Enter your organization information below</li>
+          <li>Open the assessment and add your organization details</li>
           <li>Review each of the seven dimensions</li>
           <li>Record the status and evidence for each proof point</li>
           <li>Select the maturity level your evidence supports for each dimension</li>
@@ -153,6 +175,18 @@
 
   .intro-content {
     padding: 0 1.5rem 1.5rem;
+  }
+
+  .static-heading {
+    padding: 1.5rem 1.5rem 0;
+  }
+
+  .always-open {
+    margin-bottom: 2.5rem;
+  }
+
+  .always-open .intro-content {
+    padding-top: 1rem;
   }
 
   .intro-content p {

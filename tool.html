@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Record your organization's evidence against the seven dimensions and four maturity levels of the Accessibility Maturity Model. Answers stay in your browser."
+    />
+    <meta name="theme-color" content="#2c3e50" />
+    <link rel="canonical" href="https://mgifford.github.io/w3c-a11y-maturity-model/tool.html" />
+
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('a11y-theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (error) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <title>Assessment — Accessibility Maturity Model</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>
+      <p style="max-width: 60ch; margin: 2rem auto; padding: 0 1rem; font-family: sans-serif">
+        The assessment tool needs JavaScript to record and store your answers. Without it you can
+        still read the
+        <a href="https://www.w3.org/TR/maturity-model/">Accessibility Maturity Model Group Note</a>.
+      </p>
+    </noscript>
+    <!-- Use a relative path to respect the GitHub Pages base path -->
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

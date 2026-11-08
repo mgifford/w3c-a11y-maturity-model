@@ -3,8 +3,7 @@
   import { assessmentStore, hasContent } from '../stores/assessmentStore';
   import { themeStore } from '../stores/themeStore';
   import SocialShare from './SocialShare.svelte';
-  import LogoUrl from '../assets/accessibility-maturity-model-logo.svg';
-  import { MODEL } from '../lib/maturity';
+  import Brand from './Brand.svelte';
 
   let shareOpen = false;
   let shareButton: HTMLButtonElement | null = null;
@@ -96,13 +95,7 @@
 
 <header class="site-header">
   <div class="container">
-    <div class="brand">
-      <img src={LogoUrl} alt="" class="logo" width="48" height="48" />
-      <div class="titles">
-        <h1>{MODEL.name}</h1>
-        <p class="tagline">Assessment Tool</p>
-      </div>
-    </div>
+    <Brand />
 
     <div class="header-actions" role="group" aria-label="Assessment actions">
       <button on:click={handleExport} class="btn btn-secondary">
@@ -130,6 +123,7 @@
         </button>
         <SocialShare open={shareOpen} onClose={closeShare} />
       </div>
+      <a class="btn btn-link" href="./index.html">About this tool</a>
       <button
         on:click={themeStore.toggle}
         class="btn btn-theme-toggle"
@@ -181,34 +175,6 @@
     padding: 0 1rem;
   }
 
-  h1 {
-    font-size: 2rem;
-    margin: 0;
-    font-weight: 600;
-    color: var(--color-header-text);
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .logo {
-    display: block;
-    flex: none;
-  }
-
-  .titles {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .tagline {
-    margin-top: 0.25rem;
-    font-size: 1.1rem;
-  }
-
   .header-actions {
     margin-top: 1.5rem;
     display: flex;
@@ -250,6 +216,19 @@
 
   .btn-danger:hover {
     background-color: var(--color-btn-danger-hover);
+  }
+
+  .btn-link {
+    background-color: transparent;
+    color: var(--color-header-text);
+    border: 2px solid currentColor;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .btn-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    text-decoration-thickness: 2px;
   }
 
   .btn-theme-toggle {
@@ -304,29 +283,13 @@
   }
 
   @media (max-width: 768px) {
-    h1 {
-      font-size: 1.5rem;
-    }
-
-    .brand {
-      align-items: flex-start;
-    }
-
-    .logo {
-      width: 40px;
-      height: 40px;
-    }
-
-    .tagline {
-      font-size: 1rem;
-    }
-
     .header-actions {
       flex-direction: column;
       align-items: stretch;
     }
 
     .btn,
+    .btn-link,
     .btn-theme-toggle {
       width: 100%;
       justify-content: center;

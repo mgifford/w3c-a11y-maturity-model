@@ -19,6 +19,7 @@ jobs:
           # URLs of the deployed GitHub Pages site to scan
           urls: |
             https://mgifford.github.io/w3c-a11y-maturity-model/
+            https://mgifford.github.io/w3c-a11y-maturity-model/tool.html
           # Repository where issues (and optional Copilot PRs) will be filed
           repository: mgifford/w3c-a11y-maturity-model
           # A fine-grained Personal Access Token (PAT) with:
