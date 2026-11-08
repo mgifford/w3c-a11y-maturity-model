@@ -13,10 +13,10 @@ Last updated: 2026-11-08.
 | --- | --- | --- |
 | Colour contrast (text and UI) | Verified | Automated token tests (`src/test/colorContrast.test.ts`) for both themes |
 | Structure, names, roles, labels | Verified | axe-core on the rendered overview and a dimension view (`src/test/accessibility.test.ts`) |
-| Keyboard operation | Partially verified | Focus order reviewed in code; manual keyboard walkthrough still required |
-| Screen reader behaviour | Not verified | Manual spot check with NVDA and VoiceOver still required |
-| Zoom / reflow to 200% | Not verified | Manual check still required |
-| Windows High Contrast (forced colours) | Partially verified | Stylesheet rules added; manual check still required |
+| Keyboard operation | Not run | Code reviewed; run cases A1–A9 in [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md) |
+| Screen reader behaviour | Not run | Run cases B1–B7 with NVDA or VoiceOver |
+| Zoom / reflow to 200% and 320px | Not run | Run cases C1–C3 |
+| Windows High Contrast (forced colours) | Not run | Rules added; run cases D1–D2 |
 | Reduced motion | Verified in CSS | `prefers-reduced-motion` disables transitions and animations |
 
 ## What is in place
@@ -65,17 +65,72 @@ Last updated: 2026-11-08.
   explanation, rather than being left as disabled, unfocusable buttons.
 - Corrupt or unreadable saved data no longer prevents the application from loading.
 
+## Manual test record
+
+The procedure is [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md). Record one block per run, keep the
+most recent at the top, and link an issue for every failure.
+
+### Run 1 — not yet run
+
+| Field | Value |
+| --- | --- |
+| Date | — |
+| Tester | — |
+| Browser and version | — |
+| Operating system | — |
+| Assistive technology and version | — |
+| Build tested | — |
+
+| Case | Result | Notes / issue |
+| --- | --- | --- |
+| A1 Skip link | Not run | |
+| A2 Tab order | Not run | |
+| A3 Focus visible | Not run | |
+| A4 No keyboard trap | Not run | |
+| A5 Dimension cards | Not run | |
+| A6 Share panel focus | Not run | |
+| A7 Maturity radios | Not run | |
+| A8 Status buttons | Not run | |
+| A9 Table scroll region | Not run | |
+| B1 Landmarks and headings | Not run | |
+| B2 Introduction disclosure | Not run | |
+| B3 Maturity badges | Not run | |
+| B4 Progress updates | Not run | |
+| B5 Radar chart | Not run | |
+| B6 Share dialog | Not run | |
+| B7 Import error | Not run | |
+| C1 200% zoom | Not run | |
+| C2 320px reflow | Not run | |
+| C3 Text spacing | Not run | |
+| D1 Forced colours: controls | Not run | |
+| D2 Forced colours: charts | Not run | |
+| E1 Contrast spot check | Not run | |
+| E2 System preference | Not run | |
+| E3 Theme choice persists | Not run | |
+| F1 Required field | Not run | |
+| F2 Team members | Not run | |
+| F3 Reset confirmation | Not run | |
+| G1 Optimize warning | Not run | |
+| G2 Not applicable | Not run | |
+| G3 Evidence field | Not run | |
+| H1 Link text | Not run | |
+| H2 Plain language | Not run | |
+| H3 Honest framing | Not run | |
+| I1 Print summary | Not run | |
+| I2 Export and import | Not run | |
+
 ## Known gaps
 
 These are known and deliberately left open, or require manual work:
 
-1. **No screen reader testing has been recorded.** NVDA with Firefox or Chrome, and VoiceOver with
-   Safari, should be spot-checked on: the skip link, the introduction disclosure, the dimension
-   cards, the maturity radio group, the proof-point status groups, and the share panel.
-2. **No manual keyboard walkthrough has been recorded** for this revision.
-3. **Zoom to 200% and 400% has not been checked** in a browser.
+1. **The manual test pass has not been run.** [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md) covers
+   keyboard, screen reader, zoom, forced colours, themes, forms, dynamic content, content and print.
+   Results belong in the manual test record above.
+2. **No screen reader testing has been recorded.** NVDA with Firefox or Chrome, and VoiceOver with
+   Safari, should cover cases B1–B7.
+3. **Zoom to 200% and 320px reflow have not been checked** in a browser (cases C1–C3).
 4. **Windows High Contrast mode has not been checked manually.** Rules exist under
-   `@media (forced-colors: active)` but need visual confirmation.
+   `@media (forced-colors: active)` but need visual confirmation (cases D1–D2).
 5. **Dark theme contrast is verified by calculation**, not by inspection with a display.
 6. **Per-dimension level outcome text is not shown.** The picker shows the model's general level
    descriptions, so evaluators must consult the Group Note for the dimension-specific outcomes.
@@ -91,5 +146,5 @@ npm test
 npm run build
 ```
 
-Then follow the manual checklist in [README.md](./README.md#testing) and update this file with what
-was actually tested, by whom, and with which browser and assistive technology.
+Then run [MANUAL_TEST_SCRIPT.md](./MANUAL_TEST_SCRIPT.md) and fill in the manual test record above
+with what was actually tested, by whom, and with which browser and assistive technology.

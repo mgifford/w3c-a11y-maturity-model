@@ -43,6 +43,17 @@ describe('rendered application accessibility', () => {
     expect(await analyse(container)).toEqual([]);
   });
 
+  it('skip link points at a focusable main region', () => {
+    render(App);
+
+    const skipLink = document.querySelector('a.skip-link');
+    expect(skipLink).toHaveAttribute('href', '#main-content');
+
+    const main = document.querySelector('#main-content');
+    expect(main).not.toBeNull();
+    expect(main).toHaveAttribute('tabindex', '-1');
+  });
+
   it('keeps a single level-one heading as the user moves between views', async () => {
     const { getByRole } = render(App);
 

@@ -34,7 +34,7 @@
 <div class="app">
   <Header />
   
-  <main id="main-content" class="container">
+  <main id="main-content" class="container" tabindex="-1">
     <Introduction />
     <OrganizationInfo />
     <ProgressTracker {currentView} on:showSummary={showSummary} />
