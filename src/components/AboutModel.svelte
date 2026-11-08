@@ -3,14 +3,7 @@
 </script>
 
 <section class="about" aria-labelledby="about-heading">
-  <h2 id="about-heading">About the model</h2>
-  <p class="intro">
-    The {MODEL.name} ({MODEL.acronym}) is a framework for measuring how effectively an organization
-    produces and sustains accessible digital products and services. It looks at seven dimensions,
-    each assessed against four maturity levels.
-  </p>
-
-  <h3>What this tool is, and is not</h3>
+  <h2 id="about-heading">About this tool</h2>
   <ul class="facts">
     <li>
       <strong>An independent assessment aid</strong> for the {MODEL.acronym}, published by the
@@ -31,47 +24,26 @@
       Results are informational and advisory.
     </li>
   </ul>
-
-  <p class="more">
-    More detail:
-    <a href={MODEL.url} target="_blank" rel="noopener noreferrer">
-      the Group Note
-      <span class="sr-only">(opens in a new tab)</span>
-    </a>
-    or
-    <a href={MODEL.editorDraftUrl} target="_blank" rel="noopener noreferrer">
-      the current editor's draft
-      <span class="sr-only">(opens in a new tab)</span>
-    </a>.
-  </p>
 </section>
 
 <style>
   .about {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-card-border);
+    background-color: var(--color-surface-alt);
+    border-left: 4px solid var(--color-accent-blue);
     border-radius: 8px;
-    padding: 1.75rem;
+    padding: 1.5rem;
     margin-bottom: 2.5rem;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-bottom: 0.75rem;
   }
 
-  h3 {
-    font-size: 1.15rem;
-    margin: 1.5rem 0 0.75rem;
-  }
-
-  .intro {
-    max-width: 65ch;
-  }
-
   .facts {
-    max-width: 65ch;
+    max-width: 68ch;
     padding-left: 1.25rem;
+    margin: 0;
   }
 
   .facts li {
@@ -79,9 +51,7 @@
     line-height: 1.6;
   }
 
-  .more {
-    margin-top: 1.25rem;
+  .facts li:last-child {
     margin-bottom: 0;
-    color: var(--color-text-muted);
   }
 </style>

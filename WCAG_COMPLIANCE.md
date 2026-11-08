@@ -57,7 +57,9 @@ Last updated: 2026-11-08.
 - Errors and confirmations are announced in plain language through a status region. The reset action
   uses an inline confirmation with focus moved to the confirm button, not a browser dialog.
 - The About page states what the model and this tool are and are not, including that the AMM is a
-  Group Note that is not endorsed by W3C, and that this tool is not a conformance claim.
+  Group Note that is not endorsed by W3C, and that this tool is not a conformance claim. It links to
+  the Group Note, the editor's draft, the assessment spreadsheet, the model's repository and issue
+  tracker, and the APA Working Group.
 
 ### Robust
 

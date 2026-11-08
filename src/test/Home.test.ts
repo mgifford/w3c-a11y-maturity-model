@@ -49,20 +49,35 @@ describe('Home (About) page', () => {
     expect(screen.getByRole('button', { name: /dark mode/i })).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('explains the tool and its limits without a disclosure toggle', () => {
+  it('points at the W3C and GitHub sources', () => {
     render(Home);
 
-    expect(screen.getByText(/what this tool is, and is not/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/not endorsed by w3c or its members/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/initially developed against that Group Note/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole('heading', { level: 2, name: /start with the source/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /w3c group note/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /source repository/i })).toBeInTheDocument();
   });
 
-  it('lists every dimension', () => {
+  it('explains the tool and its limits', () => {
     render(Home);
 
-    initialDimensions.forEach((dimension) => {
-      expect(screen.getByRole('heading', { level: 3, name: dimension.name })).toBeInTheDocument();
-    });
+    expect(screen.getByRole('heading', { level: 2, name: /about this tool/i })).toBeInTheDocument();
+    expect(screen.getAllByText(/not a w3c product/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/initially developed against that group note/i).length).toBeGreaterThan(0);
+  });
+
+  it('lists every dimension as a short index', () => {
+    render(Home);
+
+    const names = Array.from(document.querySelectorAll('.dimension-names li')).map((item) =>
+      item.textContent?.trim()
+    );
+    expect(names).toEqual(initialDimensions.map((dimension) => dimension.name));
+  });
+
+  it('names the four maturity levels', () => {
+    render(Home);
+
+    expect(screen.getByText(/inactive, launch, integrate and optimize/i)).toBeInTheDocument();
   });
 
   it('has a skip link pointing at a focusable main region', () => {

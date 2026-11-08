@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Brand from './Brand.svelte';
+  import SourceLinks from './SourceLinks.svelte';
   import AboutModel from './AboutModel.svelte';
   import SiteFooter from './SiteFooter.svelte';
   import { themeStore } from '../stores/themeStore';
   import { initialDimensions } from '../data/dimensionsData';
+  import { MODEL } from '../lib/maturity';
 
   onMount(() => {
     themeStore.init();
@@ -39,16 +41,23 @@
       <p class="hero-note">No account, no tracking. Answers stay in your browser.</p>
     </div>
 
+    <SourceLinks />
+
     <AboutModel />
 
     <section class="dimensions" aria-labelledby="dimensions-heading">
-      <h2 id="dimensions-heading">The seven dimensions</h2>
-      <ul class="dimension-overview">
+      <h2 id="dimensions-heading">What you'll assess</h2>
+      <p class="lead">
+        Seven dimensions, each assessed against four levels: Inactive, Launch, Integrate and Optimize.
+        The definitions for each are in the
+        <a href={MODEL.url} target="_blank" rel="noopener noreferrer">
+          Group Note
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>.
+      </p>
+      <ul class="dimension-names">
         {#each initialDimensions as dimension}
-          <li>
-            <h3>{dimension.name}</h3>
-            <p>{dimension.description}</p>
-          </li>
+          <li>{dimension.name}</li>
         {/each}
       </ul>
       <p class="closing">
@@ -155,33 +164,31 @@
   }
 
   .dimensions h2 {
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
   }
 
-  .dimension-overview {
+  .lead {
+    max-width: 65ch;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .dimension-names {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    max-width: 70ch;
   }
 
-  .dimension-overview li {
+  .dimension-names li {
     background: var(--color-surface);
     border: 1px solid var(--color-card-border);
-    border-radius: 8px;
-    padding: 1.25rem;
-  }
-
-  .dimension-overview h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .dimension-overview p {
-    color: var(--color-text-muted);
-    margin: 0;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
   }
 
   .closing {

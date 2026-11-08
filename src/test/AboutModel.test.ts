@@ -7,16 +7,10 @@ describe('AboutModel', () => {
     localStorage.clear();
   });
 
-  it('renders an About the model heading', () => {
+  it('renders an About this tool heading', () => {
     render(AboutModel);
 
-    expect(screen.getByRole('heading', { level: 2, name: /about the model/i })).toBeInTheDocument();
-  });
-
-  it('describes the model in one short paragraph', () => {
-    render(AboutModel);
-
-    expect(screen.getByText(/seven dimensions, each assessed against four maturity levels/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: /about this tool/i })).toBeInTheDocument();
   });
 
   it('states the Group Note version and publisher', () => {
@@ -55,28 +49,11 @@ describe('AboutModel', () => {
     expect(screen.getByText(/complements accessibility conformance testing/i)).toBeInTheDocument();
   });
 
-  it('links to the Group Note and the editor\u2019s draft, warning about new tabs', () => {
+  it('is a flat list of four facts with no controls or nested sections', () => {
     render(AboutModel);
 
-    const note = screen.getByRole('link', { name: /the group note/i });
-    expect(note).toHaveAttribute('href', 'https://www.w3.org/TR/maturity-model/');
-    expect(note.textContent).toMatch(/opens in a new tab/i);
-
-    const draft = screen.getByRole('link', { name: /the current editor's draft/i });
-    expect(draft).toHaveAttribute('href', 'https://w3c.github.io/maturity-model/');
-    expect(draft.textContent).toMatch(/opens in a new tab/i);
-  });
-
-  it('has no collapse control, so the limits are always visible', () => {
-    render(AboutModel);
-
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-  });
-
-  it('uses a flat list rather than nested sections', () => {
-    render(AboutModel);
-
-    expect(screen.getAllByRole('heading')).toHaveLength(2);
+    expect(screen.getAllByRole('heading')).toHaveLength(1);
     expect(document.querySelectorAll('ul.facts li')).toHaveLength(4);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });
