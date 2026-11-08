@@ -8,6 +8,7 @@
   import DimensionDetail from './components/DimensionDetail.svelte';
   import Summary from './components/Summary.svelte';
   import MaturityVisualization from './components/MaturityVisualization.svelte';
+  import { MODEL } from './lib/maturity';
   import './app.css';
 
   let currentView: 'overview' | 'dimension' | 'summary' = 'overview';
@@ -54,20 +55,30 @@
   <footer class="footer">
     <div class="container">
       <p>
-        Based on the <a href="https://www.w3.org/TR/maturity-model/" target="_blank" rel="noopener">
-          W3C Accessibility Maturity Model
-        </a>
+        Based on the <a href={MODEL.url} target="_blank" rel="noopener noreferrer">
+          {MODEL.name}
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>, published by the {MODEL.publisher} as a {MODEL.version}.
       </p>
       <p>
         <small>
-          This tool helps organizations assess their accessibility maturity across 7 dimensions.
-          Data is stored locally in your browser.
+          This is an independent tool. It is not a W3C product and is not endorsed by W3C or its
+          Members.
         </small>
       </p>
       <p>
         <small>
-          Open source and open to contributions on 
-          <a href="https://github.com/mgifford/w3c-a11y-maturity-model" target="_blank" rel="noopener">GitHub</a>.
+          Results are informational and advisory: not a conformance claim, audit, or certification.
+          Answers are stored only in this browser.
+        </small>
+      </p>
+      <p>
+        <small>
+          Open source, with contributions welcome on
+          <a href="https://github.com/mgifford/w3c-a11y-maturity-model" target="_blank" rel="noopener noreferrer">
+            GitHub
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>.
         </small>
       </p>
     </div>
@@ -101,7 +112,7 @@
   }
 
   .footer a {
-    color: var(--color-link);
+    color: var(--color-footer-link);
   }
 
   .footer p {
@@ -109,6 +120,7 @@
   }
 
   .footer small {
-    opacity: 0.8;
+    color: var(--color-footer-text);
+    font-size: 0.9rem;
   }
 </style>

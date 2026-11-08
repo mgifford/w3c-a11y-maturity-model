@@ -105,9 +105,176 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
     ]
   },
   {
+    id: 'governance-oversight',
+    name: 'Governance and Oversight',
+    description: 'Governance and oversight define the organization\'s commitment to accessibility: directing, monitoring, sustaining, and measuring accessibility across the organization through policies, standards, accountability, and decision-making structures.',
+    proofPoints: [
+      {
+        id: 'oc-1',
+        category: 'Accountability',
+        description: 'Top-level sponsor in place for digital accessibility, assigned to a position rather than a named individual',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-2',
+        category: 'Accountability',
+        description: 'Executive-level digital accessibility program leadership',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-3',
+        category: 'Accountability',
+        description: 'Executive statement of commitment to digital accessibility',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-4',
+        category: 'Financial Commitment',
+        description: 'Financial plan developed for activities to advance maturity',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-5',
+        category: 'Financial Commitment',
+        description: 'Funding committed for activities to advance maturity',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-6',
+        category: 'Policy',
+        description: 'Business strategy includes digital accessibility',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-7',
+        category: 'Policy',
+        description: 'Digital accessibility included in core values',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-8',
+        category: 'Policy',
+        description: 'Digital accessibility in code of conduct',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-9',
+        category: 'Policy',
+        description: 'ICT accessibility in employee performance objectives',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-10',
+        category: 'Policy',
+        description: 'Exception/risk acceptance process with executive approval',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-11',
+        category: 'General Training',
+        description: 'Accessibility-related training in place',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-12',
+        category: 'Dimension Goals and Metrics',
+        description: 'Goals established, metrics defined, progress tracked',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-13',
+        category: 'Accountability',
+        description: 'Position descriptions for accessibility roles specify decision authority and reporting relationships',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-14',
+        category: 'Policy',
+        description: 'Sufficient staff or other resources are allocated to implement the accessibility policy',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-15',
+        category: 'Policy',
+        description: 'Follow all applicable accessibility regulatory requirements',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-16',
+        category: 'Dimension Goals and Metrics',
+        description: 'Retention and attrition metrics for accessibility roles are tracked and reviewed',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-17',
+        category: 'Continuity',
+        description: 'Documented identification of accessibility roles that constitute single points of failure, maintained as part of organizational risk management',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-18',
+        category: 'Continuity',
+        description: 'Named and trained backup identified for each critical accessibility role',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-19',
+        category: 'Continuity',
+        description: 'Continuity procedure for vacancies in accessibility roles, including interim coverage assignment, maximum acceptable vacancy duration, and escalation path',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'oc-20',
+        category: 'Continuity',
+        description: 'Records of accessibility decisions, including conformance determinations, exception justifications, vendor evaluation outcomes, and remediation prioritization, retained in organizational systems rather than individual accounts or files',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      }
+    ]
+  },
+  {
     id: 'ict-lifecycle',
     name: 'ICT Development Lifecycle',
-    description: 'Incorporation of web, software and hardware accessibility considerations in development processes.',
+    description: 'Incorporation of web, software and hardware accessibility considerations in development processes - from idea conception, to design, development, testing, Accessibility Conformance Report (ACR) production, user research, maintenance and obsolescence.',
     proofPoints: [
       {
         id: 'ict-1',
@@ -191,7 +358,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ict-11',
-        category: 'Quality Review',
+        category: 'Quality Review Through Release',
         description: 'Manual accessibility testing with assistive technology',
         status: 'not-started',
         evidence: '',
@@ -199,7 +366,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ict-12',
-        category: 'Quality Review',
+        category: 'Quality Review Through Release',
         description: 'Automated accessibility testing implemented',
         status: 'not-started',
         evidence: '',
@@ -207,7 +374,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ict-13',
-        category: 'Quality Review',
+        category: 'Quality Review Through Release',
         description: 'Accessibility identified as product release gate',
         status: 'not-started',
         evidence: '',
@@ -215,7 +382,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ict-14',
-        category: 'Quality Review',
+        category: 'Quality Review Through Release',
         description: 'ACRs created for COTS offerings',
         status: 'not-started',
         evidence: '',
@@ -223,7 +390,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ict-15',
-        category: 'Training',
+        category: 'ICT Development Training',
         description: 'ICT development and test training in place',
         status: 'not-started',
         evidence: '',
@@ -231,8 +398,40 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ict-16',
-        category: 'Goals and Metrics',
+        category: 'Dimension Goals and Metrics',
         description: 'Goals established, metrics defined, progress tracked',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'ict-17',
+        category: 'User Experience',
+        description: 'Test subject forms, releases, instructions, or other materials are accessible',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'ict-18',
+        category: 'Planning and Design',
+        description: 'Accessibility considerations are integrated into individual components of the design system as well as into their composition within higher-level structures',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'ict-19',
+        category: 'Quality Review Through Release',
+        description: 'Bug-tracking system includes an accessibility category',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'ict-20',
+        category: 'Quality Review Through Release',
+        description: 'Design specifications include accessibility guidance and automated accessibility testing is incorporated into Continuous Integration/Continuous Delivery build pipelines',
         status: 'not-started',
         evidence: '',
         notApplicable: false
@@ -242,11 +441,11 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
   {
     id: 'knowledge-skills',
     name: 'Knowledge and Skills',
-    description: 'Ongoing education and practices to fill gaps for accessibility operations.',
+    description: 'Ongoing education, and outsourcing practices to fill gaps for accessibility operations.',
     proofPoints: [
       {
         id: 'ks-1',
-        category: 'Assessing Skills',
+        category: 'Assessing Skills to Identify and Address Gaps',
         description: 'Organizational surveys identify current skill levels and gaps',
         status: 'not-started',
         evidence: '',
@@ -254,7 +453,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-2',
-        category: 'Assessing Skills',
+        category: 'Assessing Skills to Identify and Address Gaps',
         description: 'Employee training for ICT accessibility skills tracked',
         status: 'not-started',
         evidence: '',
@@ -262,7 +461,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-3',
-        category: 'Assessing Skills',
+        category: 'Assessing Skills to Identify and Address Gaps',
         description: 'Certification or competency reviews and programs',
         status: 'not-started',
         evidence: '',
@@ -270,7 +469,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-4',
-        category: 'Assessing Skills',
+        category: 'Assessing Skills to Identify and Address Gaps',
         description: 'Accessibility criteria in employee performance measurements',
         status: 'not-started',
         evidence: '',
@@ -278,7 +477,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-5',
-        category: 'Building Capacity',
+        category: 'Building and Maintaining Organizational Capacity',
         description: 'Role-based training plans and curricula implemented',
         status: 'not-started',
         evidence: '',
@@ -286,7 +485,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-6',
-        category: 'Building Capacity',
+        category: 'Building and Maintaining Organizational Capacity',
         description: 'External training resources procured as needed',
         status: 'not-started',
         evidence: '',
@@ -294,7 +493,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-7',
-        category: 'Building Capacity',
+        category: 'Building and Maintaining Organizational Capacity',
         description: 'Accessibility training in organizational learning management systems',
         status: 'not-started',
         evidence: '',
@@ -302,7 +501,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-8',
-        category: 'Building Capacity',
+        category: 'Building and Maintaining Organizational Capacity',
         description: 'Accessibility training when onboarding new employees',
         status: 'not-started',
         evidence: '',
@@ -310,7 +509,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-9',
-        category: 'Building Capacity',
+        category: 'Building and Maintaining Organizational Capacity',
         description: 'Subject matter experts (SMEs) positioned to provide training',
         status: 'not-started',
         evidence: '',
@@ -318,7 +517,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-10',
-        category: 'Building Capacity',
+        category: 'Building and Maintaining Organizational Capacity',
         description: 'Digital accessibility events organized or attended',
         status: 'not-started',
         evidence: '',
@@ -326,111 +525,24 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'ks-11',
-        category: 'Goals and Metrics',
+        category: 'Dimension Goals and Metrics',
         description: 'Goals established, metrics defined, progress tracked',
         status: 'not-started',
         evidence: '',
         notApplicable: false
-      }
-    ]
-  },
-  {
-    id: 'oversight-culture',
-    name: 'Oversight and Culture',
-    description: 'Attitudes, sensitivity, and behaviors around accessibility, including perception and decision-making.',
-    proofPoints: [
+      },
       {
-        id: 'oc-1',
-        category: 'Organizational Culture',
-        description: 'Executive sponsor in place for digital accessibility',
+        id: 'ks-12',
+        category: 'Dimension Integration',
+        description: 'Training and learning programs are integrated into the proof points for each dimension',
         status: 'not-started',
         evidence: '',
         notApplicable: false
       },
       {
-        id: 'oc-2',
-        category: 'Organizational Culture',
-        description: 'Executive-level digital accessibility program leadership',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-3',
-        category: 'Organizational Culture',
-        description: 'Executive statement of commitment to digital accessibility',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-4',
-        category: 'Financial Commitment',
-        description: 'Financial plan developed for activities to advance maturity',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-5',
-        category: 'Financial Commitment',
-        description: 'Funding committed for activities to advance maturity',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-6',
-        category: 'ICT Accessibility Policy',
-        description: 'Business strategy includes digital accessibility',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-7',
-        category: 'ICT Accessibility Policy',
-        description: 'Digital accessibility included in core values',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-8',
-        category: 'ICT Accessibility Policy',
-        description: 'Digital accessibility in code of conduct',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-9',
-        category: 'ICT Accessibility Policy',
-        description: 'ICT accessibility in employee performance objectives',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-10',
-        category: 'ICT Accessibility Policy',
-        description: 'Exception/risk acceptance process with executive approval',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-11',
-        category: 'Training',
-        description: 'Accessibility-related training in place',
-        status: 'not-started',
-        evidence: '',
-        notApplicable: false
-      },
-      {
-        id: 'oc-12',
-        category: 'Goals and Metrics',
-        description: 'Goals established, metrics defined, progress tracked',
+        id: 'ks-13',
+        category: 'Assessing Skills to Identify and Address Gaps',
+        description: 'Assessment of whether accessibility competencies are held by more than one person within each functional area',
         status: 'not-started',
         evidence: '',
         notApplicable: false
@@ -440,7 +552,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
   {
     id: 'personnel',
     name: 'Personnel',
-    description: 'Job descriptions, recruiting, and disability-related employee resource groups.',
+    description: 'Job descriptions, recruiting, disability-related employee resource groups necessary to provide lived-experience to accessibility efforts.',
     proofPoints: [
       {
         id: 'pers-1',
@@ -468,7 +580,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'pers-4',
-        category: 'Accessible Job Application',
+        category: 'Accessible Job Application Platform',
         description: 'Hiring tools and job boards meet accessibility standards',
         status: 'not-started',
         evidence: '',
@@ -476,7 +588,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'pers-5',
-        category: 'Accessible Job Application',
+        category: 'Accessible Job Application Platform',
         description: 'Recruiting communications meet accessibility standards',
         status: 'not-started',
         evidence: '',
@@ -484,7 +596,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'pers-6',
-        category: 'Accessible Job Application',
+        category: 'Accessible Job Application Platform',
         description: 'Accessibility audit of jobs website completed',
         status: 'not-started',
         evidence: '',
@@ -524,7 +636,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'pers-11',
-        category: 'Training',
+        category: 'Accessibility Training Programs',
         description: 'Accessibility training in place',
         status: 'not-started',
         evidence: '',
@@ -532,7 +644,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'pers-12',
-        category: 'Goals and Metrics',
+        category: 'Dimension Goals and Metrics',
         description: 'Goals established, metrics defined, progress tracked',
         status: 'not-started',
         evidence: '',
@@ -543,7 +655,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
   {
     id: 'procurement',
     name: 'Procurement',
-    description: 'Strategic process for finding and acquiring accessible products and services.',
+    description: 'A strategic process that concentrates on finding and acquiring accessible products required by an organization. Activities may include: sourcing, negotiation, and selecting goods and services.',
     proofPoints: [
       {
         id: 'proc-1',
@@ -563,7 +675,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-3',
-        category: 'Procurement Language',
+        category: 'Consistent Use of Standardized Procurement Language',
         description: 'Standardized solicitation language includes accessibility',
         status: 'not-started',
         evidence: '',
@@ -571,7 +683,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-4',
-        category: 'Procurement Language',
+        category: 'Consistent Use of Standardized Procurement Language',
         description: 'Standardized contract language includes accessibility',
         status: 'not-started',
         evidence: '',
@@ -579,7 +691,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-5',
-        category: 'Evaluation Process',
+        category: 'Consistent Evaluation Process and Methods',
         description: 'Accessibility evaluations performed on solicitation responses',
         status: 'not-started',
         evidence: '',
@@ -587,7 +699,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-6',
-        category: 'Evaluation Process',
+        category: 'Consistent Evaluation Process and Methods',
         description: 'Documented evaluation methodology',
         status: 'not-started',
         evidence: '',
@@ -619,7 +731,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-10',
-        category: 'Program Management',
+        category: 'Accessibility in Procurement Program Management',
         description: 'Contract lifecycle management includes accessibility',
         status: 'not-started',
         evidence: '',
@@ -627,7 +739,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-11',
-        category: 'Program Management',
+        category: 'Accessibility in Procurement Program Management',
         description: 'Process for addressing user accessibility complaints with vendors',
         status: 'not-started',
         evidence: '',
@@ -635,7 +747,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-12',
-        category: 'Training',
+        category: 'Procurement Training',
         description: 'Procurement training in place',
         status: 'not-started',
         evidence: '',
@@ -643,8 +755,24 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'proc-13',
-        category: 'Goals and Metrics',
+        category: 'Dimension Goals and Metrics',
         description: 'Goals established, metrics defined, progress tracked',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'proc-14',
+        category: 'Contract Language',
+        description: 'Knowledge transfer and documentation deliverables required at the close of contracts for accessibility work',
+        status: 'not-started',
+        evidence: '',
+        notApplicable: false
+      },
+      {
+        id: 'proc-15',
+        category: 'Contract Language',
+        description: 'Executed contract examples with knowledge transfer language',
         status: 'not-started',
         evidence: '',
         notApplicable: false
@@ -746,7 +874,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'supp-12',
-        category: 'Training',
+        category: 'Accessibility Training Programs',
         description: 'Accessibility training in place',
         status: 'not-started',
         evidence: '',
@@ -754,7 +882,7 @@ export const initialDimensions: Omit<Dimension, 'maturityLevel' | 'notes'>[] = [
       },
       {
         id: 'supp-13',
-        category: 'Goals and Metrics',
+        category: 'Dimension Goals and Metrics',
         description: 'Goals established, metrics defined, progress tracked',
         status: 'not-started',
         evidence: '',

@@ -115,19 +115,37 @@ describe('Summary Component', () => {
     expect(notAssessed.length).toBeGreaterThan(0);
   });
 
-  it('shows overall maturity when some dimensions are assessed', () => {
+  it('does not present a combined overall maturity score', () => {
     assessmentStore.setMaturityLevel('communications', 'launch');
     assessmentStore.setMaturityLevel('procurement', 'integrate');
-    
+
     render(Summary);
-    
-    expect(screen.getByRole('heading', { name: /overall maturity level/i })).toBeInTheDocument();
+
+    expect(screen.queryByRole('heading', { name: /overall maturity level/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /how to read this report/i })).toBeInTheDocument();
+    expect(screen.getByText(/does not combine dimensions into a single score or grade/i)).toBeInTheDocument();
   });
 
-  it('does not show overall maturity when no dimensions assessed', () => {
+  it('reports how many dimensions have been assessed', () => {
+    assessmentStore.setMaturityLevel('communications', 'launch');
+    assessmentStore.setMaturityLevel('procurement', 'integrate');
+
     render(Summary);
-    
-    expect(screen.queryByRole('heading', { name: /overall maturity level/i })).not.toBeInTheDocument();
+
+    expect(screen.getByText(/2 of 7/i)).toBeInTheDocument();
+  });
+
+  it('table has a caption describing its contents', () => {
+    render(Summary);
+
+    expect(screen.getByRole('table', { name: /maturity level and proof point completion/i })).toBeInTheDocument();
+  });
+
+  it('summary heading is an h2 so the page keeps a single h1', () => {
+    render(Summary);
+
+    expect(screen.getByRole('heading', { level: 2, name: /assessment summary report/i })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
   });
 
   it('renders Export as JSON button', () => {
@@ -186,7 +204,7 @@ describe('Summary Component', () => {
   it('section has accessible aria-labelledby', () => {
     render(Summary);
     
-    const section = screen.getByRole('region');
+    const section = screen.getByRole('region', { name: /assessment summary report/i });
     expect(section).toHaveAttribute('aria-labelledby', 'summary-heading');
   });
 });

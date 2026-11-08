@@ -1,9 +1,9 @@
 <script lang="ts">
   import { assessmentStore } from '../stores/assessmentStore';
   import { createEventDispatcher } from 'svelte';
-  import { MATURITY_LEVELS } from '../types';
   import type { Assessment, Dimension } from '../types';
   import MaturityVisualization from './MaturityVisualization.svelte';
+  import { levelColor, levelLabel } from '../lib/maturity';
 
   const dispatch = createEventDispatcher();
 
@@ -15,40 +15,6 @@
 
   function goBack() {
     dispatch('back');
-  }
-
-  function getMaturityLevelColor(level: string | null) {
-    if (!level) return '#455a64';
-    switch (level) {
-      case 'inactive': return '#c62828';
-      case 'launch': return '#b45309';
-      case 'integrate': return '#1565c0';
-      case 'optimize': return '#2e7d32';
-      default: return '#455a64';
-    }
-  }
-
-  function getMaturityLevelLabel(level: string | null) {
-    if (!level) return 'Not Assessed';
-    const found = MATURITY_LEVELS.find(m => m.level === level);
-    return found ? found.label : 'Unknown';
-  }
-
-  function getOverallMaturity() {
-    const assessed = assessment.dimensions.filter(d => d.maturityLevel);
-    if (assessed.length === 0) return null;
-    
-    const levelScores = { inactive: 0, launch: 1, integrate: 2, optimize: 3 };
-    const totalScore = assessed.reduce((sum, d) => {
-      return sum + (levelScores[d.maturityLevel!] || 0);
-    }, 0);
-    
-    const avgScore = totalScore / assessed.length;
-    
-    if (avgScore < 0.5) return 'inactive';
-    if (avgScore < 1.5) return 'launch';
-    if (avgScore < 2.5) return 'integrate';
-    return 'optimize';
   }
 
   function exportPDF() {
@@ -74,7 +40,6 @@
     return { completed: completed.length, total: applicable.length };
   }
 
-  $: overallMaturity = getOverallMaturity();
 </script>
 
 <section class="summary" aria-labelledby="summary-heading">
@@ -85,7 +50,7 @@
   </div>
 
   <div class="summary-content">
-    <h1 id="summary-heading">Assessment Summary Report</h1>
+    <h2 id="summary-heading">Assessment Summary Report</h2>
 
     <div class="report-info">
       <div class="info-grid">
@@ -106,27 +71,28 @@
       </div>
     </div>
 
-    {#if overallMaturity}
-      <div class="overall-maturity">
-        <h2>Overall Maturity Level</h2>
-        <div 
-          class="maturity-badge-large" 
-          style="background-color: {getMaturityLevelColor(overallMaturity)}"
-        >
-          {getMaturityLevelLabel(overallMaturity)}
-        </div>
-        <p class="maturity-explanation">
-          Based on the average maturity across all assessed dimensions.
-        </p>
-      </div>
-    {/if}
-
-    <MaturityVisualization />
+    <div class="report-note">
+      <h3>How to read this report</h3>
+      <p>
+        The Accessibility Maturity Model assesses maturity <strong>per dimension</strong> and defines
+        no overall organizational maturity level, so this report does not combine dimensions into a
+        single score or grade.
+      </p>
+      <p>
+        Levels are cumulative: a dimension reaches a higher level only once the outcomes at the lower
+        levels are met. Results are informational and advisory, and are not an accessibility
+        conformance claim, audit, or certification.
+      </p>
+      <p><strong>{assessment.dimensions.filter((d) => d.maturityLevel).length} of {assessment.dimensions.length}</strong> dimensions assessed.</p>
+    </div>
 
     <div class="dimensions-summary">
-      <h2>Dimensions Assessment</h2>
-      <div class="dimensions-table">
+      <h3>Dimensions Assessment</h3>
+      <!-- Scrollable region: tabindex makes the overflow reachable by keyboard -->
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+      <div class="dimensions-table" role="region" aria-label="Dimensions assessment table" tabindex="0">
         <table>
+          <caption>Maturity level and proof point completion by dimension</caption>
           <thead>
             <tr>
               <th scope="col">Dimension</th>
@@ -144,9 +110,9 @@
                 <td>
                   <span 
                     class="maturity-badge-small" 
-                    style="background-color: {getMaturityLevelColor(dimension.maturityLevel)}"
+                    style="background-color: {levelColor(dimension.maturityLevel)}"
                   >
-                    {getMaturityLevelLabel(dimension.maturityLevel)}
+                    {levelLabel(dimension.maturityLevel)}
                   </span>
                 </td>
                 <td class="proof-points-col">
@@ -166,19 +132,19 @@
     </div>
 
     <div class="detailed-findings">
-      <h2>Detailed Findings</h2>
+      <h3>Detailed Findings</h3>
       {#each assessment.dimensions as dimension}
         {@const completion = getCompletedProofPoints(dimension)}
         <div class="dimension-section">
-          <h3>
+          <h4>
             {dimension.name}
             <span 
               class="maturity-badge-inline" 
-              style="background-color: {getMaturityLevelColor(dimension.maturityLevel)}"
+              style="background-color: {levelColor(dimension.maturityLevel)}"
             >
-              {getMaturityLevelLabel(dimension.maturityLevel)}
+              {levelLabel(dimension.maturityLevel)}
             </span>
-          </h3>
+          </h4>
           
           <div class="dimension-stats-detail">
             <p><strong>Description:</strong> {dimension.description}</p>
@@ -187,13 +153,13 @@
 
           {#if dimension.notes}
             <div class="dimension-notes">
-              <h4>Notes:</h4>
+              <h5>Notes:</h5>
               <p>{dimension.notes}</p>
             </div>
           {/if}
 
           <div class="proof-points-detail">
-            <h4>Completed Proof Points:</h4>
+            <h5>Completed Proof Points:</h5>
             <ul>
               {#each dimension.proofPoints.filter(p => p.status === 'completed') as proofPoint}
                 <li>
@@ -211,7 +177,7 @@
 
           {#if dimension.proofPoints.filter(p => p.status === 'in-progress').length > 0}
             <div class="in-progress-list">
-              <h4>In Progress:</h4>
+              <h5>In Progress:</h5>
               <ul>
                 {#each dimension.proofPoints.filter(p => p.status === 'in-progress') as proofPoint}
                   <li>{proofPoint.category}: {proofPoint.description}</li>
@@ -222,7 +188,7 @@
 
           {#if dimension.proofPoints.filter(p => p.status === 'planned').length > 0}
             <div class="planned-list">
-              <h4>Planned:</h4>
+              <h5>Planned:</h5>
               <ul>
                 {#each dimension.proofPoints.filter(p => p.status === 'planned') as proofPoint}
                   <li>{proofPoint.category}: {proofPoint.description}</li>
@@ -233,7 +199,7 @@
 
           {#if dimension.proofPoints.filter(p => p.notApplicable).length > 0}
             <div class="not-applicable-list">
-              <h4>Not Applicable Proof Points:</h4>
+              <h5>Not Applicable Proof Points:</h5>
               <ul>
                 {#each dimension.proofPoints.filter(p => p.notApplicable) as proofPoint}
                   <li>{proofPoint.category}: {proofPoint.description}</li>
@@ -247,7 +213,7 @@
 
     {#if assessment.overallNotes}
       <div class="overall-notes">
-        <h2>Overall Notes</h2>
+        <h3>Overall Notes</h3>
         <p>{assessment.overallNotes}</p>
       </div>
     {/if}
@@ -255,17 +221,17 @@
 
   <div class="action-buttons no-print">
     <button on:click={exportJSON} class="btn btn-secondary">
-      📥 Export as JSON
+      <span aria-hidden="true">📥</span> Export as JSON
     </button>
     <button on:click={exportPDF} class="btn btn-primary">
-      🖨️ Print/Save as PDF
+      <span aria-hidden="true">🖨️</span> Print/Save as PDF
     </button>
   </div>
 </section>
 
 <style>
   .summary {
-    background: white;
+    background: var(--color-surface);
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -278,7 +244,7 @@
   .btn-back {
     background: none;
     border: none;
-    color: #3498db;
+    color: var(--color-accent-blue);
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
@@ -287,28 +253,22 @@
   }
 
   .btn-back:hover {
-    color: #2980b9;
+    color: var(--color-accent-blue-strong);
     text-decoration: underline;
   }
 
-  h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
 
   h2 {
     font-size: 1.75rem;
-    color: #2c3e50;
+    color: var(--color-heading);
     margin: 2rem 0 1rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #ecf0f1;
+    border-bottom: 2px solid var(--color-border);
   }
 
   h3 {
     font-size: 1.5rem;
-    color: #2c3e50;
+    color: var(--color-heading);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -317,12 +277,12 @@
 
   h4 {
     font-size: 1.2rem;
-    color: #34495e;
+    color: var(--color-heading);
     margin: 1rem 0 0.5rem 0;
   }
 
   .report-info {
-    background-color: #f8f9fa;
+    background-color: var(--color-surface-alt);
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -346,43 +306,43 @@
 
   .info-label {
     font-weight: 600;
-    color: #595959;
+    color: var(--color-text-muted);
     font-size: 0.9rem;
   }
 
   .info-value {
-    color: #2c3e50;
+    color: var(--color-heading);
     font-size: 1.1rem;
   }
 
-  .overall-maturity {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
+  .report-note {
+    background-color: var(--color-surface-alt);
+    border-left: 4px solid var(--color-accent-blue);
+    color: var(--color-text);
+    padding: 1.5rem;
     border-radius: 8px;
-    text-align: center;
     margin-bottom: 2rem;
   }
 
-  .overall-maturity h2 {
-    color: white;
-    border: none;
-    margin: 0 0 1rem 0;
+  .report-note h3 {
+    margin-top: 0;
   }
 
-  .maturity-badge-large {
-    display: inline-block;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin: 1rem 0;
+  .report-note p {
+    margin-bottom: 0.75rem;
+    max-width: 70ch;
   }
 
-  .maturity-explanation {
-    margin-top: 1rem;
-    opacity: 0.9;
+  .report-note p:last-child {
+    margin-bottom: 0;
+  }
+
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text);
+    padding-bottom: 0.75rem;
   }
 
   .dimensions-table {
@@ -396,8 +356,8 @@
   }
 
   thead {
-    background-color: #34495e;
-    color: white;
+    background-color: var(--color-table-head-bg);
+    color: var(--color-table-head-text);
   }
 
   th {
@@ -408,16 +368,16 @@
 
   td {
     padding: 1rem;
-    border-bottom: 1px solid #ecf0f1;
+    border-bottom: 1px solid var(--color-border);
   }
 
   tbody tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--color-surface-alt);
   }
 
   .dimension-name {
     font-weight: 500;
-    color: #2c3e50;
+    color: var(--color-heading);
   }
 
   .maturity-badge-small {
@@ -446,7 +406,7 @@
 
   .table-progress {
     height: 8px;
-    background-color: #ecf0f1;
+    background-color: var(--color-progress-track);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 0.25rem;
@@ -454,19 +414,19 @@
 
   .table-progress-bar {
     height: 100%;
-    background-color: #3498db;
+    background-color: var(--color-accent-blue);
     transition: width 0.3s ease;
   }
 
   .progress-text {
     font-size: 0.875rem;
-    color: #595959;
+    color: var(--color-text-muted);
   }
 
   .dimension-section {
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background-color: #f8f9fa;
+    background-color: var(--color-surface-alt);
     border-radius: 8px;
   }
 
@@ -476,18 +436,19 @@
 
   .dimension-stats-detail p {
     margin-bottom: 0.5rem;
-    color: #555;
+    color: var(--color-text-muted);
   }
 
   .dimension-notes {
-    background-color: #fff3cd;
+    background-color: var(--color-surface-alt);
+    border-left: 4px solid var(--color-level-launch);
     padding: 1rem;
     border-radius: 6px;
     margin: 1rem 0;
   }
 
   .dimension-notes p {
-    color: #856404;
+    color: var(--color-text);
     margin: 0;
   }
 
@@ -500,7 +461,7 @@
   .proof-points-detail li,
   .not-applicable-list li {
     padding: 0.5rem 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .proof-points-detail li:last-child,
@@ -511,14 +472,14 @@
   .evidence-note {
     margin-top: 0.5rem;
     padding: 0.5rem;
-    background-color: #e3f2fd;
-    border-left: 3px solid #2196f3;
+    background-color: var(--color-surface-alt);
+    border-left: 3px solid var(--color-accent-blue);
     font-size: 0.9rem;
-    color: #0d47a1;
+    color: var(--color-text);
   }
 
   .no-items {
-    color: #595959;
+    color: var(--color-text-muted);
     font-style: italic;
   }
 
@@ -526,40 +487,40 @@
     margin-top: 1rem;
   }
 
-  .not-applicable-list h4 {
-    color: #595959;
+  .not-applicable-list h5 {
+    color: var(--color-text-muted);
   }
 
   .not-applicable-list li {
-    color: #595959;
+    color: var(--color-text-muted);
   }
 
   .in-progress-list {
     margin-top: 1rem;
   }
 
-  .in-progress-list h4 {
-    color: #92400e;
+  .in-progress-list h5 {
+    color: var(--color-text);
   }
 
   .in-progress-list li {
-    color: #78350f;
+    color: var(--color-text);
   }
 
   .planned-list {
     margin-top: 1rem;
   }
 
-  .planned-list h4 {
-    color: #1e3a8a;
+  .planned-list h5 {
+    color: var(--color-text);
   }
 
   .planned-list li {
-    color: #1e40af;
+    color: var(--color-text);
   }
 
   .overall-notes {
-    background-color: #f8f9fa;
+    background-color: var(--color-surface-alt);
     padding: 1.5rem;
     border-radius: 8px;
   }
@@ -570,7 +531,7 @@
     justify-content: center;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 2px solid #ecf0f1;
+    border-top: 2px solid var(--color-border);
   }
 
   .btn {
@@ -587,12 +548,12 @@
   }
 
   .btn-primary {
-    background-color: #2471a3;
+    background-color: var(--color-btn-secondary-bg);
     color: white;
   }
 
   .btn-primary:hover {
-    background-color: #1a5c8a;
+    background-color: var(--color-btn-secondary-hover);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
@@ -632,11 +593,11 @@
       padding: 1.5rem;
     }
 
-    h1 {
+    h2 {
       font-size: 1.75rem;
     }
 
-    h2 {
+    h3 {
       font-size: 1.5rem;
     }
 

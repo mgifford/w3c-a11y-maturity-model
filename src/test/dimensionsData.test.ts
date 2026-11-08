@@ -6,6 +6,7 @@ import { MATURITY_LEVELS } from '../types';
 describe('dimensionsData - Data Structure Integrity', () => {
   it('exports exactly 7 dimensions', () => {
     expect(initialDimensions).toHaveLength(7);
+    expect(initialDimensions.reduce((n, d) => n + d.proofPoints.length, 0)).toBe(105);
   });
 
   it('every dimension has a unique id', () => {
@@ -71,15 +72,55 @@ describe('dimensionsData - Data Structure Integrity', () => {
     });
   });
 
-  it('includes the expected dimension ids', () => {
-    const ids = initialDimensions.map(d => d.id);
-    expect(ids).toContain('communications');
-    expect(ids).toContain('ict-lifecycle');
-    expect(ids).toContain('knowledge-skills');
-    expect(ids).toContain('oversight-culture');
-    expect(ids).toContain('personnel');
-    expect(ids).toContain('procurement');
-    expect(ids).toContain('support');
+  it('uses the model dimension ids and order', () => {
+    expect(initialDimensions.map((d) => d.id)).toEqual([
+      'communications',
+      'governance-oversight',
+      'ict-lifecycle',
+      'knowledge-skills',
+      'personnel',
+      'procurement',
+      'support'
+    ]);
+  });
+
+  it('uses the model dimension names', () => {
+    expect(initialDimensions.map((d) => d.name)).toEqual([
+      'Communications',
+      'Governance and Oversight',
+      'ICT Development Lifecycle',
+      'Knowledge and Skills',
+      'Personnel',
+      'Procurement',
+      'Support'
+    ]);
+  });
+
+  it('includes the proof point categories defined by the model', () => {
+    const categoriesFor = (id: string) =>
+      Array.from(new Set(
+        initialDimensions.find((d) => d.id === id)!.proofPoints.map((p) => p.category)
+      ));
+
+    expect(categoriesFor('governance-oversight')).toEqual([
+      'Accountability',
+      'Financial Commitment',
+      'Policy',
+      'General Training',
+      'Dimension Goals and Metrics',
+      'Continuity'
+    ]);
+    expect(categoriesFor('ict-lifecycle')).toContain('User Experience');
+    expect(categoriesFor('knowledge-skills')).toContain('Dimension Integration');
+    expect(categoriesFor('support')).toContain('External Support');
+  });
+
+  it('includes the 2026 continuity proof points', () => {
+    const governance = initialDimensions.find((d) => d.id === 'governance-oversight')!;
+    const continuity = governance.proofPoints.filter((p) => p.category === 'Continuity');
+    expect(continuity.length).toBeGreaterThanOrEqual(4);
+    expect(continuity.some((p) => /single points of failure/i.test(p.description))).toBe(true);
+    expect(continuity.some((p) => /records of accessibility decisions/i.test(p.description))).toBe(true);
   });
 
   it('every proof point category is non-empty', () => {

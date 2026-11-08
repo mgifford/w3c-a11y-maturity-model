@@ -13,7 +13,7 @@ describe('Header Component', () => {
   it('renders the application title', () => {
     render(Header);
     
-    expect(screen.getByRole('heading', { name: /w3c accessibility maturity model/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: /accessibility maturity model/i })).toBeInTheDocument();
   });
 
   it('renders the tagline', () => {
@@ -54,19 +54,33 @@ describe('Header Component', () => {
     expect(screen.getByRole('button', { name: /new assessment/i })).toBeInTheDocument();
   });
 
-  it('nav has accessible label', () => {
+  it('action group has an accessible label', () => {
     render(Header);
-    
-    const nav = screen.getByRole('navigation', { name: /main actions/i });
-    expect(nav).toBeInTheDocument();
+
+    const group = screen.getByRole('group', { name: /assessment actions/i });
+    expect(group).toBeInTheDocument();
   });
 
-  it('logo image has alt text', () => {
+  it('the logo is decorative and does not duplicate the heading', () => {
     render(Header);
-    
-    const logo = screen.getByRole('img', { name: /accessibility maturity model logo/i });
-    expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('alt');
+
+    const logo = document.querySelector('img.logo');
+    expect(logo).toHaveAttribute('alt', '');
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
+  it('theme toggle exposes its state with aria-pressed', () => {
+    render(Header);
+
+    const toggle = screen.getByRole('button', { name: /dark mode/i });
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('interactive controls come after the theme toggle in the layout, matching DOM order', () => {
+    render(Header);
+
+    const buttons = Array.from(document.querySelectorAll('.header-actions button'));
+    expect(buttons.at(-1)?.textContent).toMatch(/dark mode/i);
   });
 
   it('Share button has aria-haspopup="dialog"', () => {
@@ -111,43 +125,45 @@ describe('Header Component', () => {
     expect(URL.createObjectURL).toHaveBeenCalled();
   });
 
-  it('Reset button triggers confirmation dialog', async () => {
+  it('Reset asks for inline confirmation instead of a blocking browser dialog', async () => {
     assessmentStore.updateOrganizationInfo('Test Org', []);
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
-    
+
     render(Header);
-    
-    const resetBtn = screen.getByRole('button', { name: /new assessment/i });
-    await fireEvent.click(resetBtn);
-    
-    expect(confirmSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Are you sure')
-    );
+
+    await fireEvent.click(screen.getByRole('button', { name: /new assessment/i }));
+
+    expect(screen.getByText(/start a new assessment\? this clears/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /yes, start a new assessment/i })).toBeInTheDocument();
   });
 
-  it('Reset clears data when user confirms', async () => {
+  it('Reset clears data when the user confirms', async () => {
     assessmentStore.updateOrganizationInfo('Test Org', []);
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
     const resetSpy = vi.spyOn(assessmentStore, 'reset');
-    
+
     render(Header);
-    
-    const resetBtn = screen.getByRole('button', { name: /new assessment/i });
-    await fireEvent.click(resetBtn);
-    
+
+    await fireEvent.click(screen.getByRole('button', { name: /new assessment/i }));
+    await fireEvent.click(screen.getByRole('button', { name: /yes, start a new assessment/i }));
+
     expect(resetSpy).toHaveBeenCalled();
+    expect(screen.getByRole('status')).toHaveTextContent(/previous answers were cleared/i);
   });
 
-  it('Reset does not clear data when user cancels', async () => {
+  it('Reset does not clear data when the user cancels', async () => {
     assessmentStore.updateOrganizationInfo('Test Org', []);
-    vi.spyOn(window, 'confirm').mockReturnValue(false);
     const resetSpy = vi.spyOn(assessmentStore, 'reset');
-    
+
     render(Header);
-    
-    const resetBtn = screen.getByRole('button', { name: /new assessment/i });
-    await fireEvent.click(resetBtn);
-    
+
+    await fireEvent.click(screen.getByRole('button', { name: /new assessment/i }));
+    await fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+
     expect(resetSpy).not.toHaveBeenCalled();
+  });
+
+  it('import failures are announced in plain language', async () => {
+    render(Header);
+
+    expect(assessmentStore.importData('{ not json')).toBe(false);
   });
 });

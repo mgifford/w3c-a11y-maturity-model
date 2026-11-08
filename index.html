@@ -4,27 +4,67 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="W3C Accessibility Maturity Model Assessment Tool - Evaluate your organization's accessibility maturity across 7 dimensions" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="An independent assessment tool built on the W3C Accessibility Maturity Model. Explore seven dimensions of organizational accessibility maturity and record the evidence that supports each level."
+    />
     <meta name="theme-color" content="#2c3e50" />
 
-    <!-- Open Graph -->
+    <!-- Apply the saved colour theme before first paint to avoid a flash of the wrong theme. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('a11y-theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (error) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <!-- Open Graph / social sharing -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="W3C Accessibility Maturity Model Assessment Tool" />
-    <meta property="og:description" content="Assess and discuss your organization's accessibility maturity across people, process, and technology." />
-    <meta property="og:site_name" content="W3C Accessibility Maturity Model" />
-    <!-- Use relative path to work under GitHub Pages subpath -->
-    <meta property="og:image" content="./social-card.png" />
-    <meta property="og:image:alt" content="W3C Accessibility Maturity Model – Assessment Tool" />
+    <meta property="og:title" content="Accessibility Maturity Model Assessment Tool" />
+    <meta
+      property="og:description"
+      content="Assess and discuss your organization's accessibility maturity across people, process, and technology."
+    />
+    <meta property="og:site_name" content="Accessibility Maturity Model" />
+    <meta property="og:url" content="https://mgifford.github.io/w3c-a11y-maturity-model/" />
+    <!-- Social crawlers require an absolute image URL -->
+    <meta
+      property="og:image"
+      content="https://mgifford.github.io/w3c-a11y-maturity-model/social-card.png"
+    />
+    <meta property="og:image:alt" content="Accessibility Maturity Model assessment tool" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://mgifford.github.io/w3c-a11y-maturity-model/social-card.png"
+    />
 
-    
-
-    <title>W3C Accessibility Maturity Model Assessment Tool</title>
+    <title>Accessibility Maturity Model Assessment Tool</title>
   </head>
   <body>
     <div id="app"></div>
-    <!-- Use relative path to respect GitHub Pages base path during dev -->
+    <noscript>
+      <p style="max-width: 60ch; margin: 2rem auto; padding: 0 1rem; font-family: sans-serif">
+        This assessment tool needs JavaScript to record and store your answers. If you cannot enable
+        JavaScript, you can read the
+        <a href="https://www.w3.org/TR/maturity-model/">Accessibility Maturity Model Group Note</a>
+        directly.
+      </p>
+    </noscript>
+    <!-- Use a relative path to respect the GitHub Pages base path -->
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>

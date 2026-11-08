@@ -25,10 +25,21 @@ function migrateAssessment(data: any): Assessment {
   };
 }
 
+function readStoredAssessment(): Assessment | null {
+  try {
+    const storedData = localStorage.getItem('a11y-assessment');
+    if (!storedData) return null;
+    const parsed = JSON.parse(storedData);
+    if (!parsed || !Array.isArray(parsed.dimensions) || parsed.dimensions.length === 0) return null;
+    return migrateAssessment(parsed);
+  } catch {
+    // Unreadable or corrupt saved data must not stop the app from loading.
+    return null;
+  }
+}
+
 export function createAssessmentStore() {
-  const storedData = localStorage.getItem('a11y-assessment');
-  
-  const initialAssessment: Assessment = storedData ? migrateAssessment(JSON.parse(storedData)) : {
+  const initialAssessment: Assessment = readStoredAssessment() ?? {
     id: crypto.randomUUID(),
     organizationName: '',
     assessmentDate: new Date().toISOString().split('T')[0],
@@ -153,10 +164,12 @@ export function createAssessmentStore() {
     importData: (jsonData: string) => {
       try {
         const imported = JSON.parse(jsonData);
+        if (!imported || !Array.isArray(imported.dimensions) || imported.dimensions.length === 0) {
+          return false;
+        }
         set(migrateAssessment(imported));
         return true;
-      } catch (e) {
-        console.error('Failed to import data:', e);
+      } catch {
         return false;
       }
     }
@@ -170,7 +183,8 @@ export const progress = derived(
   $assessment => {
     const total = $assessment.dimensions.length;
     const completed = $assessment.dimensions.filter(d => d.maturityLevel !== null).length;
-    return { completed, total, percentage: (completed / total) * 100 };
+    const percentage = total > 0 ? (completed / total) * 100 : 0;
+    return { completed, total, percentage };
   }
 );
 

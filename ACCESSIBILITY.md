@@ -12,11 +12,11 @@ This repository is a tool for assessing organizational accessibility maturity. S
 
 | Metric | Status / Value |
 | :--- | :--- |
-| Open accessibility issues | View issues with accessibility label |
-| Accessibility checks in CI | Automated axe scans and validation workflow |
+| Open accessibility issues | [Issues labelled accessibility](https://github.com/mgifford/w3c-a11y-maturity-model/issues?q=is%3Aissue+is%3Aopen+label%3Aaccessibility) |
+| Accessibility checks in CI | Pull requests run type checks, contrast token tests, an axe-core pass, and a production build. A weekly axe scan of the deployed site files issues. |
 | Keyboard navigation status | Required for primary controls and filters |
-| Contrast review status | Review required for each UI refresh, including light/dark modes |
-| Last accessibility review date | 2026-04-13 |
+| Contrast review status | Automated in both light and dark themes; component styles must use the tokens in `src/app.css` |
+| Last accessibility review date | 2026-11-08 |
 
 ## 3. Contributor requirements (guardrails)
 
@@ -55,12 +55,12 @@ Severity model:
 
 Current and planned checks for this repository:
 
-- HTML and content structure review during pull requests
-- Automated axe-core scans in CI for public pages across desktop/mobile and light/dark modes
-- Keyboard-only interaction pass for primary assessment controls
-- Contrast review for new visual styles
-- Link validation through scheduled workflows
-- Periodic screen reader spot checks for key flows
+- Type checking, unit and component tests, and a production build on every pull request
+- Automated contrast checks that read the design tokens, for both themes
+- Automated axe-core checks on the rendered overview and a dimension view
+- Weekly axe scan of the deployed site, which files issues automatically
+- Keyboard-only interaction pass for primary assessment controls (manual, per release)
+- Periodic screen reader spot checks for key flows (manual)
 
 Recommended manual test pass before merge for UI changes:
 
@@ -86,6 +86,8 @@ Assistive technology spot-check targets (when available):
 - This is a static GitHub Pages site with no server-side components.
 - Some repository metadata comes from automated scripts and may be incomplete.
 - External linked pages may not meet the same accessibility level as this repository.
+- The tool does not yet support the model's customisation and scoping options, so adaptations must be recorded outside the tool.
+- Automated checks cover structure and contrast, but screen reader behaviour, zoom, and high-contrast mode still need manual review. See [WCAG_COMPLIANCE.md](./WCAG_COMPLIANCE.md) for the current list.
 
 ## 8. Getting help
 
@@ -104,4 +106,4 @@ Planned improvements:
 - Track accessibility review dates and unresolved barriers
 - Improve screenshot and image text alternatives over time
 
-Last updated: 2026-04-13
+Last updated: 2026-11-08
