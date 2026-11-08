@@ -1,11 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import Brand from './Brand.svelte';
-  import { themeStore } from '../stores/themeStore';
-  import Introduction from './Introduction.svelte';
+  import AboutModel from './AboutModel.svelte';
   import SiteFooter from './SiteFooter.svelte';
+  import { themeStore } from '../stores/themeStore';
   import { initialDimensions } from '../data/dimensionsData';
-  import { MODEL } from '../lib/maturity';
 
   onMount(() => {
     themeStore.init();
@@ -31,26 +30,19 @@
 
   <main id="main-content" class="container" tabindex="-1">
     <div class="hero">
-      <h2>A structured way to assess how your organization produces accessible digital services</h2>
+      <h2>Assess your organization's accessibility maturity</h2>
       <p>
-        Work through the seven dimensions of the {MODEL.acronym}, record the evidence behind each proof
-        point, and decide the maturity level your evidence supports. Everything stays in your browser.
+        Work through seven dimensions, record the evidence behind each proof point, and decide the
+        maturity level your evidence supports.
       </p>
       <a class="button" href="./tool.html">Start the assessment</a>
-      <p class="hero-note">
-        No account, no tracking, nothing sent to a server. You can export your answers as JSON at any
-        time.
-      </p>
+      <p class="hero-note">No account, no tracking. Answers stay in your browser.</p>
     </div>
 
-    <Introduction toggleable={false} />
+    <AboutModel />
 
     <section class="dimensions" aria-labelledby="dimensions-heading">
       <h2 id="dimensions-heading">The seven dimensions</h2>
-      <p class="lead">
-        The model is organized around seven dimensions of an organization, each assessed against the
-        same four maturity levels.
-      </p>
       <ul class="dimension-overview">
         {#each initialDimensions as dimension}
           <li>
@@ -59,15 +51,9 @@
           </li>
         {/each}
       </ul>
-    </section>
-
-    <section class="next-step" aria-labelledby="next-step-heading">
-      <h2 id="next-step-heading">Ready to begin?</h2>
-      <p>
-        The assessment takes about 30 to 60 minutes for a first pass. You do not need to complete it in
-        one sitting: answers stay in this browser until you clear them.
+      <p class="closing">
+        <a class="button" href="./tool.html">Start the assessment</a>
       </p>
-      <a class="button" href="./tool.html">Start the assessment</a>
     </section>
   </main>
 
@@ -168,18 +154,8 @@
     text-decoration: underline;
   }
 
-  .dimensions {
-    margin-top: 3rem;
-  }
-
   .dimensions h2 {
-    margin-bottom: 0.5rem;
-  }
-
-  .lead {
-    color: var(--color-text-muted);
-    margin-bottom: 1.5rem;
-    max-width: 65ch;
+    margin-bottom: 1.25rem;
   }
 
   .dimension-overview {
@@ -188,7 +164,7 @@
     margin: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
 
   .dimension-overview li {
@@ -208,21 +184,8 @@
     margin: 0;
   }
 
-  .next-step {
-    margin-top: 3rem;
-    padding: 1.5rem;
-    background-color: var(--color-surface-alt);
-    border-left: 4px solid var(--color-accent-blue);
-    border-radius: 8px;
-  }
-
-  .next-step h2 {
-    margin-top: 0;
-  }
-
-  .next-step p {
-    max-width: 65ch;
-    margin-bottom: 1.25rem;
+  .closing {
+    margin-top: 2rem;
   }
 
   @media (max-width: 768px) {
