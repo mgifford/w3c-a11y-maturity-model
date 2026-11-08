@@ -3,7 +3,7 @@
   import { createEventDispatcher } from 'svelte';
   import type { Assessment, Dimension } from '../types';
   import MaturityVisualization from './MaturityVisualization.svelte';
-  import { levelColor, levelLabel } from '../lib/maturity';
+  import { levelColor, levelLabel, MODEL } from '../lib/maturity';
 
   const dispatch = createEventDispatcher();
 
@@ -84,6 +84,10 @@
         conformance claim, audit, or certification.
       </p>
       <p><strong>{assessment.dimensions.filter((d) => d.maturityLevel).length} of {assessment.dimensions.length}</strong> dimensions assessed.</p>
+      <p class="report-version">
+        Assessed against the {MODEL.name}: {MODEL.version}, with editor's-draft changes through
+        {MODEL.syncedThrough}.
+      </p>
     </div>
 
     <div class="dimensions-summary">
@@ -335,6 +339,11 @@
 
   .report-note p:last-child {
     margin-bottom: 0;
+  }
+
+  .report-version {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
   }
 
   caption {

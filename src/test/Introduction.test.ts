@@ -102,6 +102,22 @@ describe('Introduction Component', () => {
     expect(screen.getByText(/not a w3c recommendation or a standard/i)).toBeInTheDocument();
   });
 
+  it('discloses that the content also follows the editor\'s draft', () => {
+    render(Introduction);
+
+    expect(screen.getAllByText(/editor's draft/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/30 September 2026/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/goes beyond the Group Note/i)).toBeInTheDocument();
+  });
+
+  it('names where the tool differs from the published Group Note', () => {
+    render(Introduction);
+
+    expect(screen.getByText(/where this differs from the group note/i)).toBeInTheDocument();
+    expect(screen.getByText(/governance and oversight/i)).toBeInTheDocument();
+    expect(screen.getByText(/continuity additions/i)).toBeInTheDocument();
+  });
+
   it('describes four maturity levels, not five', () => {
     render(Introduction);
 

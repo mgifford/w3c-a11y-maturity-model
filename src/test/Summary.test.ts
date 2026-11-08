@@ -135,6 +135,13 @@ describe('Summary Component', () => {
     expect(screen.getByText(/2 of 7/i)).toBeInTheDocument();
   });
 
+  it('states which version of the model the report used', () => {
+    render(Summary);
+
+    expect(screen.getByText(/4 November 2025/i)).toBeInTheDocument();
+    expect(screen.getByText(/30 September 2026/i)).toBeInTheDocument();
+  });
+
   it('table has a caption describing its contents', () => {
     render(Summary);
 

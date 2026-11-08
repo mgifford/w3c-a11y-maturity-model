@@ -58,7 +58,8 @@
         Based on the <a href={MODEL.url} target="_blank" rel="noopener noreferrer">
           {MODEL.name}
           <span class="sr-only">(opens in a new tab)</span>
-        </a>, published by the {MODEL.publisher} as a {MODEL.version}.
+        </a>, published by the {MODEL.publisher} as a {MODEL.version}, with editor's-draft changes
+        through {MODEL.syncedThrough}.
       </p>
       <p>
         <small>

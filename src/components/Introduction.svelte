@@ -33,6 +33,11 @@
             an independent, unaffiliated assessment aid built on the {MODEL.acronym}, published by the
             {' '}{MODEL.publisher} as a <strong>{MODEL.version}</strong>;
           </li>
+          <li>
+            updated with the model's <strong>editor's draft</strong> changes published through
+            <strong>{MODEL.syncedThrough}</strong>, so some content goes beyond the Group Note. The draft
+            is not final and may change again;
+          </li>
           <li>a structured way to discuss how your organization produces and sustains accessible outcomes.</li>
         </ul>
         <p><strong>This tool is not</strong></p>
@@ -46,6 +51,11 @@
             complements accessibility conformance testing; it does not replace it.
           </li>
         </ul>
+        <p>
+          <strong>Where this differs from the Group Note:</strong> the tool follows the draft. &ldquo;Oversight
+          and Culture&rdquo; is shown as &ldquo;Governance and Oversight&rdquo; and is assessed second, and the proof
+          points include the draft's Continuity additions.
+        </p>
         <p>
           Results are informational and advisory. Final responsibility for interpretation,
           prioritization, and action rests with your organization and its accessibility experts.
