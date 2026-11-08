@@ -65,8 +65,11 @@ describe('ProgressTracker Component', () => {
   it('progress stats have aria-live for dynamic updates', () => {
     render(ProgressTracker, { props: { currentView: 'overview' } });
     
+    // A single polite region covers both figures, so updates are not announced twice.
     const liveRegions = document.querySelectorAll('[aria-live="polite"]');
-    expect(liveRegions.length).toBeGreaterThanOrEqual(2);
+    expect(liveRegions).toHaveLength(1);
+    expect(liveRegions[0]).toHaveTextContent(/dimensions/i);
+    expect(liveRegions[0]).toHaveTextContent(/proof points/i);
   });
 
   it('updates dimension count when a maturity level is set', async () => {
@@ -109,7 +112,7 @@ describe('ProgressTracker Component', () => {
   });
 
   it('shows completion banner with View Summary Report button when all dimensions are assessed', async () => {
-    const dimensions = ['communications', 'ict-lifecycle', 'knowledge-skills', 'oversight-culture', 'personnel', 'procurement', 'support'];
+    const dimensions = ['communications', 'ict-lifecycle', 'knowledge-skills', 'governance-oversight', 'personnel', 'procurement', 'support'];
     dimensions.forEach(id => assessmentStore.setMaturityLevel(id, 'launch'));
     
     render(ProgressTracker, { props: { currentView: 'overview' } });
@@ -121,7 +124,7 @@ describe('ProgressTracker Component', () => {
   });
 
   it('View Summary Report button is clickable', async () => {
-    const dimensions = ['communications', 'ict-lifecycle', 'knowledge-skills', 'oversight-culture', 'personnel', 'procurement', 'support'];
+    const dimensions = ['communications', 'ict-lifecycle', 'knowledge-skills', 'governance-oversight', 'personnel', 'procurement', 'support'];
     dimensions.forEach(id => assessmentStore.setMaturityLevel(id, 'launch'));
     
     render(ProgressTracker, { props: { currentView: 'overview' } });
@@ -143,6 +146,6 @@ describe('ProgressTracker Component', () => {
     render(ProgressTracker, { props: { currentView: 'overview' } });
     
     expect(screen.getByText(/proof points:/i)).toBeInTheDocument();
-    expect(screen.getByText(/0 of 89 completed/i)).toBeInTheDocument();
+    expect(screen.getByText(/0 of 105 completed/i)).toBeInTheDocument();
   });
 });

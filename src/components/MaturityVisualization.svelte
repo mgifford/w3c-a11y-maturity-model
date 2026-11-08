@@ -2,6 +2,7 @@
   import { assessmentStore } from '../stores/assessmentStore';
   import type { Dimension, MaturityLevel } from '../types';
   import { MATURITY_LEVELS } from '../types';
+  import { levelColor, levelLabel } from '../lib/maturity';
 
   $: dimensions = $assessmentStore.dimensions;
   
@@ -12,18 +13,9 @@
     return index + 1; // 1-4 scale
   }
 
-  // Get color for maturity level
-  // Colors are darkened to meet WCAG 2.1 AA contrast (≥4.5:1) against both white text
-  // (badge backgrounds) and light backgrounds such as #f8f9fa (text labels).
+  // Colour tokens for maturity levels (see app.css); they meet WCAG 2.2 AA contrast.
   function getColor(level: MaturityLevel | null): string {
-    if (!level) return '#455a64';
-    switch(level) {
-      case 'inactive': return '#c62828';
-      case 'launch': return '#b45309';
-      case 'integrate': return '#1565c0';
-      case 'optimize': return '#2e7d32';
-      default: return '#455a64';
-    }
+    return levelColor(level);
   }
 
   // Calculate SVG coordinates for radar chart
@@ -84,26 +76,27 @@
     total: 0
   };
 
-  // Calculate overall statistics
-  $: stats = dimensions ? {
-    total: dimensions.length,
-    assessed: dimensions.filter(d => d.maturityLevel).length,
-    inactive: dimensions.filter(d => d.maturityLevel === 'inactive').length,
-    launch: dimensions.filter(d => d.maturityLevel === 'launch').length,
-    integrate: dimensions.filter(d => d.maturityLevel === 'integrate').length,
-    optimize: dimensions.filter(d => d.maturityLevel === 'optimize').length,
-    avgMaturity: dimensions.filter(d => d.maturityLevel).length > 0
-      ? (dimensions.reduce((sum, d) => sum + getMaturityValue(d.maturityLevel), 0) / dimensions.filter(d => d.maturityLevel).length).toFixed(1)
-      : '0.0'
-  } : {
-    total: 0,
-    assessed: 0,
-    inactive: 0,
-    launch: 0,
-    integrate: 0,
-    optimize: 0,
-    avgMaturity: '0.0'
-  };
+
+  // Dimension-level counts. The model defines no overall maturity score, so no
+  // average or composite is calculated here.
+  $: stats = dimensions
+    ? {
+        total: dimensions.length,
+        assessed: dimensions.filter((d) => d.maturityLevel).length,
+        inactive: dimensions.filter((d) => d.maturityLevel === 'inactive').length,
+        launch: dimensions.filter((d) => d.maturityLevel === 'launch').length,
+        integrate: dimensions.filter((d) => d.maturityLevel === 'integrate').length,
+        optimize: dimensions.filter((d) => d.maturityLevel === 'optimize').length
+      }
+    : { total: 0, assessed: 0, inactive: 0, launch: 0, integrate: 0, optimize: 0 };
+
+  // Text alternative for the radar chart, so the data is available to screen readers.
+  $: radarSummary =
+    dimensions && dimensions.length
+      ? dimensions
+          .map((d) => `${d.name}: ${d.maturityLevel ? levelLabel(d.maturityLevel) : 'not assessed'}`)
+          .join('; ')
+      : 'No dimensions assessed yet.';
 
   $: radarPoints = getRadarPoints();
   $: axisLines = getAxisLines();
@@ -119,9 +112,9 @@
       <div class="stat-label">Dimensions Assessed</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">{stats.avgMaturity}</div>
-      <div class="stat-label">Average Maturity</div>
-      <div class="stat-sublabel">(out of 4.0)</div>
+      <div class="stat-value">{proofPointStats.total > 0 ? Math.round((proofPointStats.completed / proofPointStats.total) * 100) : 0}%</div>
+      <div class="stat-label">Proof Points Complete</div>
+      <div class="stat-sublabel">(of applicable proof points)</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">{proofPointStats.completed}/{proofPointStats.total}</div>
@@ -183,7 +176,16 @@
     <div class="radar-section">
       <h3>Maturity Radar Chart</h3>
       <div class="radar-container">
-        <svg viewBox="0 0 300 300" class="radar-chart">
+        <svg
+          viewBox="0 0 300 300"
+          class="radar-chart"
+          role="img"
+          aria-labelledby="radar-title radar-desc"
+        >
+          <title id="radar-title">Maturity level by dimension</title>
+          <desc id="radar-desc">
+            Radar chart plotting the recorded maturity level for each dimension. {radarSummary}.
+          </desc>
           <!-- Background circles -->
           {#each [1, 2, 3, 4] as level}
             <circle
@@ -191,7 +193,7 @@
               cy="150"
               r={level * 30}
               fill="none"
-              stroke="#e0e0e0"
+              class="grid-line"
               stroke-width="1"
             />
             <text
@@ -210,7 +212,7 @@
               y1={axis.y1}
               x2={axis.x2}
               y2={axis.y2}
-              stroke="#cccccc"
+              class="axis-line"
               stroke-width="1"
             />
             <text
@@ -224,12 +226,7 @@
           {/each}
 
           <!-- Data polygon -->
-          <polygon
-            points={radarPoints}
-            fill="rgba(33, 150, 243, 0.3)"
-            stroke="#2196f3"
-            stroke-width="2"
-          />
+          <polygon points={radarPoints} class="data-polygon" stroke-width="2" />
 
           <!-- Data points -->
           {#each dimensions as dim, index}
@@ -248,8 +245,8 @@
                 cx={x}
                 cy={y}
                 r="4"
-                fill={getColor(dim.maturityLevel)}
-                stroke="white"
+                class="data-point"
+                style="fill: {getColor(dim.maturityLevel)}; stroke: var(--color-surface)"
                 stroke-width="2"
               />
             {/if}
@@ -258,16 +255,16 @@
       </div>
       <div class="legend">
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #c62828"></span> Inactive (1)
+          <span class="legend-marker" aria-hidden="true" style="background-color: {getColor('inactive')}"></span> Inactive (1)
         </div>
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #b45309"></span> Launch (2)
+          <span class="legend-marker" aria-hidden="true" style="background-color: {getColor('launch')}"></span> Launch (2)
         </div>
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #1565c0"></span> Integrate (3)
+          <span class="legend-marker" aria-hidden="true" style="background-color: {getColor('integrate')}"></span> Integrate (3)
         </div>
         <div class="legend-item">
-          <span class="legend-marker" style="background-color: #2e7d32"></span> Optimize (4)
+          <span class="legend-marker" aria-hidden="true" style="background-color: {getColor('optimize')}"></span> Optimize (4)
         </div>
       </div>
     </div>
@@ -319,7 +316,7 @@
             <div class="progress-bar-container">
               <div 
                 class="progress-bar proof-bar" 
-                style="width: {proofPointPercentage}%; background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%)"
+                style="width: {proofPointPercentage}%; background: linear-gradient(90deg, var(--color-banner-from) 0%, var(--color-banner-to) 100%)"
               >
                 {#if proofPointPercentage > 10}
                   <span class="bar-text">{Math.round(proofPointPercentage)}%</span>
@@ -337,19 +334,19 @@
   .visualization-container {
     margin: 2rem 0;
     padding: 2rem;
-    background: white;
+    background: var(--color-surface);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
 
   h2 {
-    color: #2c3e50;
+    color: var(--color-heading);
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
   }
 
   h3 {
-    color: #34495e;
+    color: var(--color-heading);
     margin-bottom: 1rem;
     font-size: 1.3rem;
   }
@@ -362,8 +359,8 @@
   }
 
   .stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--color-intro-from) 0%, var(--color-intro-to) 100%);
+    color: #ffffff;
     padding: 1.5rem;
     border-radius: 8px;
     text-align: center;
@@ -378,12 +375,12 @@
 
   .stat-label {
     font-size: 1rem;
-    opacity: 0.9;
+    color: #ffffff;
   }
 
   .stat-sublabel {
     font-size: 0.85rem;
-    opacity: 0.8;
+    color: #ececf5;
     margin-top: 0.25rem;
   }
 
@@ -420,13 +417,13 @@
   }
 
   .count {
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 0.9rem;
   }
 
   .distribution-bar-container {
     height: 30px;
-    background: #f0f0f0;
+    background: var(--color-progress-track);
     border-radius: 4px;
     overflow: hidden;
   }
@@ -436,8 +433,11 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding-right: 8px;
     transition: width 0.3s ease;
+  }
+
+  .percentage-label {
+    padding-right: 8px;
   }
 
   .percentage-label {
@@ -449,6 +449,20 @@
   .radar-container {
     max-width: 500px;
     margin: 0 auto;
+  }
+
+  .grid-line {
+    stroke: var(--color-border);
+    fill: none;
+  }
+
+  .axis-line {
+    stroke: var(--color-border);
+  }
+
+  .data-polygon {
+    fill: color-mix(in srgb, var(--color-accent-blue) 20%, transparent);
+    stroke: var(--color-accent-blue);
   }
 
   .radar-chart {
@@ -490,7 +504,7 @@
   }
 
   .section-description {
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 0.95rem;
     margin-top: -0.5rem;
     margin-bottom: 1rem;
@@ -500,7 +514,7 @@
   .staircase-section {
     margin-top: 2.5rem;
     padding: 1.5rem;
-    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    background: var(--color-surface-alt);
     border-radius: 8px;
   }
 
@@ -552,7 +566,7 @@
   .step-label {
     margin-top: 0.75rem;
     font-size: 0.8rem;
-    color: #666;
+    color: var(--color-text-muted);
     text-align: center;
     max-width: 150px;
     line-height: 1.3;
@@ -570,7 +584,7 @@
     flex-direction: column;
     gap: 0.75rem;
     padding: 1rem;
-    background: #f8f9fa;
+    background: var(--color-surface-alt);
     border-radius: 8px;
   }
 
@@ -583,7 +597,7 @@
 
   .dimension-name {
     font-weight: 700;
-    color: #2c3e50;
+    color: var(--color-heading);
     font-size: 1.05rem;
     flex: 1;
   }
@@ -602,7 +616,7 @@
 
   .proof-point-count {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--color-text-muted);
   }
 
   .bar-row {
@@ -614,14 +628,14 @@
   .bar-label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #555;
+    color: var(--color-text-muted);
     min-width: 90px;
   }
 
   .progress-bar-container {
     flex: 1;
     height: 24px;
-    background: #e9ecef;
+    background: var(--color-progress-track);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
@@ -634,6 +648,9 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  .bar-text {
     padding-right: 8px;
   }
 

@@ -23,7 +23,7 @@ describe('DimensionDetail Component - Form Interactions', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
     // Find the first "In Progress" button
-    const inProgressButtons = screen.getAllByRole('button', { name: /mark as in progress/i });
+    const inProgressButtons = screen.getAllByRole('button', { name: /^in progress$/i });
     expect(inProgressButtons.length).toBeGreaterThan(0);
     
     await fireEvent.click(inProgressButtons[0]);
@@ -35,7 +35,7 @@ describe('DimensionDetail Component - Form Interactions', () => {
   it('allows setting proof point status to planned', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const plannedButtons = screen.getAllByRole('button', { name: /mark as planned/i });
+    const plannedButtons = screen.getAllByRole('button', { name: /^planned$/i });
     expect(plannedButtons.length).toBeGreaterThan(0);
     
     await fireEvent.click(plannedButtons[0]);
@@ -46,7 +46,7 @@ describe('DimensionDetail Component - Form Interactions', () => {
   it('allows setting proof point status to completed', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const completedButtons = screen.getAllByRole('button', { name: /mark as completed/i });
+    const completedButtons = screen.getAllByRole('button', { name: /^completed$/i });
     expect(completedButtons.length).toBeGreaterThan(0);
     
     await fireEvent.click(completedButtons[0]);
@@ -73,7 +73,7 @@ describe('DimensionDetail Component - Form Interactions', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
     // N/A buttons have text "N/A" and title "Mark as not applicable"
-    const naButtons = screen.getAllByTitle(/mark as not applicable/i);
+    const naButtons = screen.getAllByRole('button', { name: /^not applicable$/i });
     expect(naButtons.length).toBeGreaterThan(0);
     
     const firstNAButton = naButtons[0];
@@ -83,27 +83,24 @@ describe('DimensionDetail Component - Form Interactions', () => {
     expect(firstNAButton).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('disables status buttons when marked not applicable', async () => {
+  it('replaces status buttons with an explanation when marked not applicable', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
-    
-    const inProgressButtons = screen.getAllByRole('button', { name: /mark as in progress/i });
-    const naButtons = screen.getAllByTitle(/mark as not applicable/i);
-    
-    const firstInProgressButton = inProgressButtons[0] as HTMLButtonElement;
-    const firstNAButton = naButtons[0];
-    
-    expect(firstInProgressButton.disabled).toBe(false);
-    
-    await fireEvent.click(firstNAButton);
-    
-    // Status buttons should now be disabled
-    expect(firstInProgressButton.disabled).toBe(true);
+
+    const statusGroupsBefore = screen.getAllByRole('group', { name: /status for:/i }).length;
+    const naButtons = screen.getAllByRole('button', { name: /^not applicable$/i });
+
+    await fireEvent.click(naButtons[0]);
+
+    // The control is removed rather than disabled, so it never becomes an
+    // unfocusable, unannounced dead end.
+    expect(screen.getAllByRole('group', { name: /status for:/i }).length).toBe(statusGroupsBefore - 1);
+    expect(screen.getByText(/marked not applicable/i)).toBeInTheDocument();
   });
 
   it('shows evidence textarea when proof point is completed', async () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const completedButtons = screen.getAllByRole('button', { name: /mark as completed/i });
+    const completedButtons = screen.getAllByRole('button', { name: /^completed$/i });
     
     // Initially no evidence textarea visible
     let evidenceTextareas = screen.queryAllByRole('textbox', { name: /evidence/i });
@@ -121,7 +118,7 @@ describe('DimensionDetail Component - Form Interactions', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
     // Mark first proof point as completed
-    const completedButtons = screen.getAllByRole('button', { name: /mark as completed/i });
+    const completedButtons = screen.getAllByRole('button', { name: /^completed$/i });
     await fireEvent.click(completedButtons[0]);
     
     // Find evidence textarea
@@ -147,25 +144,36 @@ describe('DimensionDetail Component - Form Interactions', () => {
 
   it('has accessible back button', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
-    
-    const backButton = screen.getByRole('button', { name: /back to dimension list/i });
+
+    const backButton = screen.getByRole('button', { name: /back to overview/i });
     expect(backButton).toBeInTheDocument();
-    expect(backButton).toHaveAttribute('aria-label');
+  });
+
+  it('updates the completion percentage when a proof point changes', async () => {
+    render(DimensionDetail, { props: { dimensionId: 'communications' } });
+
+    expect(screen.getByRole('status')).toHaveTextContent(/0% complete/i);
+
+    const completedButtons = screen.getAllByRole('button', { name: /^completed$/i });
+    await fireEvent.click(completedButtons[0]);
+
+    // 1 of 12 applicable proof points
+    expect(screen.getByRole('status')).toHaveTextContent(/8% complete/i);
   });
 
   it('displays completion percentage', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
     // Should show completion status
-    expect(screen.getByText(/completion:/i)).toBeInTheDocument();
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.getByText(/^completion$/i)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(/0% complete/i);
   });
 
   it('has proper form labels', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
     // Check maturity level group has label
-    const maturityGroup = screen.getByRole('group', { name: /select maturity level/i });
+    const maturityGroup = screen.getByRole('group', { name: /maturity level/i });
     expect(maturityGroup).toBeInTheDocument();
     
     // Check that it has labelledby attribute
@@ -186,17 +194,17 @@ describe('DimensionDetail Component - Form Interactions', () => {
   it('displays help text for proof points', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    expect(screen.getByText(/set the status of each proof point/i)).toBeInTheDocument();
+    expect(screen.getByText(/record the status of each proof point/i)).toBeInTheDocument();
   });
 
   it('N/A button has proper ARIA attributes', () => {
     render(DimensionDetail, { props: { dimensionId: 'communications' } });
     
-    const naButtons = screen.getAllByTitle(/mark as not applicable/i);
+    const naButtons = screen.getAllByRole('button', { name: /^not applicable$/i });
     
     naButtons.forEach(button => {
       expect(button).toHaveAttribute('aria-pressed');
-      expect(button).toHaveAttribute('title');
+      expect(button).toHaveAccessibleName(/not applicable/i);
     });
   });
 

@@ -28,12 +28,13 @@ describe('DimensionList Component', () => {
     expect(cards).toHaveLength(7);
   });
 
-  it('each dimension card has an assessment button', () => {
+  it('each dimension card has exactly one control', () => {
     render(DimensionList);
-    
-    const assessButtons = screen.getAllByRole('button', { name: /start assessment/i });
-    // All 7 dimensions should have "Start Assessment" since none are started yet
-    expect(assessButtons.length).toBe(7);
+
+    const cards = document.querySelectorAll('article.dimension-card');
+    cards.forEach((card) => {
+      expect(card.querySelectorAll('button')).toHaveLength(1);
+    });
   });
 
   it('dimension title buttons have proper aria-label', () => {
@@ -45,33 +46,34 @@ describe('DimensionList Component', () => {
 
   it('maturity badges show "Not Assessed" for unstarted dimensions', () => {
     render(DimensionList);
-    
-    const notAssessedBadges = screen.getAllByRole('status', { name: /maturity level: not assessed/i });
-    expect(notAssessedBadges.length).toBe(7);
+
+    const badges = document.querySelectorAll('.maturity-badge');
+    expect(badges).toHaveLength(7);
+    badges.forEach((badge) => {
+      expect(badge.textContent).toMatch(/maturity level:\s*not assessed/i);
+    });
   });
 
-  it('shows Start button when dimension has no maturity level set', () => {
+  it('maturity badges are not live regions', () => {
     render(DimensionList);
-    
-    const startButtons = screen.getAllByRole('button', { name: /start assessment/i });
-    expect(startButtons.length).toBeGreaterThan(0);
+
+    expect(screen.queryAllByRole('status')).toHaveLength(0);
   });
 
-  it('shows Continue button after maturity level is set', async () => {
-    // Set maturity level for first dimension
+  it('shows the recorded level once a dimension is assessed', () => {
     assessmentStore.setMaturityLevel('communications', 'launch');
-    
+
     render(DimensionList);
-    
-    const continueButton = screen.getByRole('button', { name: /continue assessment/i });
-    expect(continueButton).toBeInTheDocument();
+
+    const badges = Array.from(document.querySelectorAll('.maturity-badge'));
+    expect(badges.some((badge) => /launch/i.test(badge.textContent ?? ''))).toBe(true);
   });
 
   it('shows proof points completion stats', () => {
     render(DimensionList);
     
     // Each dimension should show "Proof Points:" label with count
-    const stats = screen.getAllByText(/proof points:/i);
+    const stats = screen.getAllByText(/proof points complete/i);
     expect(stats.length).toBe(7);
   });
 
@@ -98,29 +100,28 @@ describe('DimensionList Component', () => {
     expect(commButton).toBeInTheDocument();
   });
 
-  it('dispatches selectDimension event when assess button is clicked', async () => {
+  it('dimension cards are operable by keyboard', async () => {
     render(DimensionList);
-    
-    const startButton = screen.getAllByRole('button', { name: /start assessment/i })[0];
-    
-    // The button should be clickable without error
-    await expect(fireEvent.click(startButton)).resolves.toBeTruthy();
+
+    const button = screen.getByRole('button', { name: /assess communications/i });
+    button.focus();
+    expect(document.activeElement).toBe(button);
+
+    await expect(fireEvent.click(button)).resolves.toBeTruthy();
   });
 
   it('updates proof point completion count after toggling a proof point', async () => {
     render(DimensionList);
     
-    // Initially communications shows 0/N completed
-    const initialText = screen.getAllByText(/0\//)[0];
-    expect(initialText).toBeInTheDocument();
-    
+    // Communications and Personnel both hold 12 proof points
+    expect(screen.getAllByText(/0 of 12/i).length).toBeGreaterThan(0);
+
     // Toggle a proof point in the store
     assessmentStore.toggleProofPoint('communications', 'comm-1');
-    
-    // Re-check — the list is reactive
-    await Promise.resolve(); // allow microtask to process
-    const updatedText = screen.getAllByText(/1\//)[0];
-    expect(updatedText).toBeInTheDocument();
+
+    // Re-check - the list is reactive
+    await Promise.resolve();
+    expect(screen.getAllByText(/1 of 12/i).length).toBeGreaterThan(0);
   });
 
   it('dimension descriptions are visible', () => {

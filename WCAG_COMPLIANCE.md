@@ -1,241 +1,95 @@
-# WCAG 2.2 AA Compliance & Testing Summary
+# Accessibility conformance notes
 
-## ✅ WCAG 2.2 AA Compliance Implemented
+This document records what has been checked, how, and what is still unverified. It is **not** a
+conformance claim. The target is WCAG 2.2 Level AA against the static interface; formal
+conformance would require a full evaluation, including testing with disabled users and assistive
+technology, which this project has not carried out.
 
-### 1. Perceivable (Principle 1)
-- **1.4.3 Contrast (Minimum)**: ✅ All text has 4.5:1 contrast ratio
-- **1.4.11 Non-text Contrast**: ✅ UI components have 3:1 contrast
-- **1.4.12 Text Spacing**: ✅ Line height 1.6, adequate spacing
+Last updated: 2026-11-08.
 
-### 2. Operable (Principle 2)
-- **2.1.1 Keyboard**: ✅ All functionality available via keyboard
-- **2.1.2 No Keyboard Trap**: ✅ No focus traps
-- **2.4.1 Bypass Blocks**: ✅ Skip link implemented
-- **2.4.3 Focus Order**: ✅ Logical tab order
-- **2.4.7 Focus Visible**: ✅ 3px solid focus indicators with offset
-- **2.4.11 Focus Appearance (NEW in 2.2)**: ✅ Enhanced focus with box-shadow
-- **2.4.13 Focus Appearance (Enhanced)**: ✅ Visible focus indicators
-- **2.5.3 Label in Name**: ✅ Accessible names match visible labels
-- **2.5.8 Target Size (NEW in 2.2)**: ✅ Minimum 44x44px touch targets
+## Status summary
 
-### 3. Understandable (Principle 3)
-- **3.2.4 Consistent Identification**: ✅ Consistent UI patterns
-- **3.3.1 Error Identification**: ✅ Form validation messages
-- **3.3.2 Labels or Instructions**: ✅ All inputs have labels
-- **3.3.3 Error Suggestion**: ✅ Help text provided
-- **3.3.7 Redundant Entry (NEW in 2.2)**: ✅ localStorage prevents re-entry
+| Area | Status | How it was checked |
+| --- | --- | --- |
+| Colour contrast (text and UI) | Verified | Automated token tests (`src/test/colorContrast.test.ts`) for both themes |
+| Structure, names, roles, labels | Verified | axe-core on the rendered overview and a dimension view (`src/test/accessibility.test.ts`) |
+| Keyboard operation | Partially verified | Focus order reviewed in code; manual keyboard walkthrough still required |
+| Screen reader behaviour | Not verified | Manual spot check with NVDA and VoiceOver still required |
+| Zoom / reflow to 200% | Not verified | Manual check still required |
+| Windows High Contrast (forced colours) | Partially verified | Stylesheet rules added; manual check still required |
+| Reduced motion | Verified in CSS | `prefers-reduced-motion` disables transitions and animations |
 
-### 4. Robust (Principle 4)
-- **4.1.2 Name, Role, Value**: ✅ Proper ARIA attributes
-- **4.1.3 Status Messages**: ✅ aria-live for progress updates
+## What is in place
 
-## 🎨 Accessibility Features Added
+### Perceivable
 
-### Global Styles (`app.css`)
-```css
-✅ Skip link for keyboard navigation
-✅ Enhanced focus indicators (3px solid #3498db)
-✅ Focus-visible support
-✅ Minimum touch targets (44x44px)
-✅ High contrast mode support
-✅ Reduced motion support
-✅ Screen reader only text utility
-```
+- Text meets 4.5:1 and large text meets 3:1 in both themes. The contrast test reads the tokens from
+  `src/app.css` and fails the build if a pair drops below its threshold.
+- Non-text UI (focus rings, progress fills, table header text) meets 3:1.
+- Links are underlined, so they are distinguishable without relying on colour alone.
+- Status is never conveyed by colour alone: progress bars are paired with percentages, maturity
+  badges carry text labels, and proof-point states have both a written label and `aria-pressed`.
+- The radar chart has `role="img"`, a `<title>` and a `<desc>` listing each dimension's level.
+- Content reflows; there is no horizontal scrolling at 320 CSS pixels except the summary table,
+  which is wrapped in a keyboard-reachable scroll region.
+- Information supplied with CSS gradients is backed by solid token colours chosen so that the
+  lightest point of each gradient still meets the text threshold.
 
-### Component-Level Accessibility
+### Operable
 
-#### OrganizationInfo Component
-- ✅ Required field indicators
-- ✅ aria-required="true"
-- ✅ Help text with aria-describedby
-- ✅ List with role="list" and aria-label
-- ✅ Descriptive button labels (aria-label="Add team member")
-- ✅ Enter key support for adding assessors
+- A skip link precedes the header.
+- All controls are native `<button>`, `<a>`, `<input>` and `<textarea>` elements.
+- Focus is visible everywhere (3px outline, 2px offset). On dark surfaces the ring switches to
+  white; inside the introduction it switches to white as well.
+- The share panel moves focus to its first control when opened, closes on Escape, and returns focus
+  to the Share button.
+- The theme toggle is last in the DOM and last visually, so focus order matches reading order.
+- Reduced-motion preferences are respected globally.
 
-#### DimensionDetail Component
-- ✅ Checkbox labels with aria-describedby
-- ✅ Radio group with aria-labelledby
-- ✅ Toggle buttons with aria-pressed
-- ✅ Progress status with aria-live="polite"
-- ✅ Completion indicators with role="status"
-- ✅ Evidence textareas with proper labels
+### Understandable
 
-#### ProgressTracker Component
-- ✅ Progress bars with role="progressbar"
-- ✅ aria-valuenow, aria-valuemin, aria-valuemax
-- ✅ Live region announcements (aria-live="polite")
+- One `<h1>` per view, with logical heading order beneath it. Headings contain their disclosure
+  buttons rather than sitting inside them.
+- Every form control has a programmatic label; the required field is marked with text, not just an
+  asterisk.
+- Errors and confirmations are announced in plain language through a status region. The reset action
+  uses an inline confirmation with focus moved to the confirm button, not a browser dialog.
+- The introduction states what the model and this tool are and are not, including that the AMM is a
+  Group Note that is not endorsed by W3C.
 
-#### MaturityVisualization Component
-- ✅ Semantic heading hierarchy
-- ✅ Color not sole indicator (labels + colors)
-- ✅ Text alternatives for visual data
+### Robust
 
-## 🧪 Testing Implementation
+- Card badges are not live regions; only the values that change in response to user action are
+  announced (`role="status"` on the completion percentage and the status messages).
+- Proof points marked not applicable have their status controls removed and replaced with an
+  explanation, rather than being left as disabled, unfocusable buttons.
+- Corrupt or unreadable saved data no longer prevents the application from loading.
 
-### Test Suite
+## Known gaps
+
+These are known and deliberately left open, or require manual work:
+
+1. **No screen reader testing has been recorded.** NVDA with Firefox or Chrome, and VoiceOver with
+   Safari, should be spot-checked on: the skip link, the introduction disclosure, the dimension
+   cards, the maturity radio group, the proof-point status groups, and the share panel.
+2. **No manual keyboard walkthrough has been recorded** for this revision.
+3. **Zoom to 200% and 400% has not been checked** in a browser.
+4. **Windows High Contrast mode has not been checked manually.** Rules exist under
+   `@media (forced-colors: active)` but need visual confirmation.
+5. **Dark theme contrast is verified by calculation**, not by inspection with a display.
+6. **Per-dimension level outcome text is not shown.** The picker shows the model's general level
+   descriptions, so evaluators must consult the Group Note for the dimension-specific outcomes.
+7. **Custom extensions and scoping are not supported**, so the tool cannot record the adaptations the
+   model asks organizations to document when sharing results with third parties.
+
+## How to re-verify
+
 ```bash
-npm test              # Run all tests
-npm run test:ui       # Run with Vitest UI
-```
-
-### Test Coverage
-- ✅ **15 passing tests** confirming:
-  - Form inputs are accessible
-  - ARIA attributes are present
-  - Labels are associated
-  - Keyboard navigation works
-  - Data persistence functions
-  - Interactive elements respond correctly
-
-### Test Files Created
-1. **OrganizationInfo.test.ts**
-   - Tests form inputs, labels, ARIA attributes
-   - Tests add/remove assessors functionality
-   - Tests keyboard interactions (Enter key)
-   - Tests accessible list implementation
-
-2. **DimensionDetail.test.ts**
-   - Tests proof point checkboxes
-   - Tests maturity level selection
-   - Tests N/A toggle functionality  
-   - Tests evidence textarea visibility
-   - Tests form labels and ARIA
-   - Tests completion tracking
-
-## 📋 WCAG 2.2 Checklist
-
-### Level A (Required)
-- [x] 1.1.1 Non-text Content
-- [x] 1.2.1 Audio-only and Video-only
-- [x] 1.3.1 Info and Relationships
-- [x] 1.3.2 Meaningful Sequence
-- [x] 1.3.3 Sensory Characteristics
-- [x] 1.4.1 Use of Color
-- [x] 1.4.2 Audio Control
-- [x] 2.1.1 Keyboard
-- [x] 2.1.2 No Keyboard Trap
-- [x] 2.1.4 Character Key Shortcuts
-- [x] 2.2.1 Timing Adjustable
-- [x] 2.2.2 Pause, Stop, Hide
-- [x] 2.3.1 Three Flashes or Below
-- [x] 2.4.1 Bypass Blocks
-- [x] 2.4.2 Page Titled
-- [x] 2.4.3 Focus Order
-- [x] 2.4.4 Link Purpose
-- [x] 2.5.1 Pointer Gestures
-- [x] 2.5.2 Pointer Cancellation
-- [x] 2.5.3 Label in Name
-- [x] 2.5.4 Motion Actuation
-- [x] 3.1.1 Language of Page
-- [x] 3.2.1 On Focus
-- [x] 3.2.2 On Input
-- [x] 3.3.1 Error Identification
-- [x] 3.3.2 Labels or Instructions
-- [x] 3.3.7 Redundant Entry (NEW 2.2)
-- [x] 4.1.1 Parsing
-- [x] 4.1.2 Name, Role, Value
-
-### Level AA (Current Target)
-- [x] 1.2.4 Captions (Live)
-- [x] 1.2.5 Audio Description
-- [x] 1.3.4 Orientation
-- [x] 1.3.5 Identify Input Purpose
-- [x] 1.4.3 Contrast (Minimum)
-- [x] 1.4.4 Resize Text
-- [x] 1.4.5 Images of Text
-- [x] 1.4.10 Reflow
-- [x] 1.4.11 Non-text Contrast
-- [x] 1.4.12 Text Spacing
-- [x] 1.4.13 Content on Hover or Focus
-- [x] 2.4.5 Multiple Ways
-- [x] 2.4.6 Headings and Labels
-- [x] 2.4.7 Focus Visible
-- [x] 2.4.11 Focus Appearance (NEW 2.2)
-- [x] 2.5.7 Dragging Movements
-- [x] 2.5.8 Target Size (NEW 2.2)
-- [x] 3.1.2 Language of Parts
-- [x] 3.2.3 Consistent Navigation
-- [x] 3.2.4 Consistent Identification
-- [x] 3.2.6 Consistent Help (NEW 2.2)
-- [x] 3.3.3 Error Suggestion
-- [x] 3.3.4 Error Prevention
-- [x] 3.3.8 Accessible Authentication (NEW 2.2)
-
-## 🔍 Testing Instructions
-
-### Manual Testing
-1. **Keyboard Navigation**
-   - Tab through all interactive elements
-   - Verify focus indicators are visible
-   - Test Enter/Space on buttons
-   - Verify no keyboard traps
-
-2. **Screen Reader Testing**
-   - Use NVDA/JAWS/VoiceOver
-   - Verify all form labels are announced
-   - Check ARIA live regions
-   - Verify button states
-
-3. **Zoom Testing**
-   - Test at 200% zoom
-   - Verify no horizontal scrolling
-   - Check text reflow
-
-4. **Color Contrast**
-   - Use browser DevTools or contrast checker
-   - Verify all text meets 4.5:1
-   - Verify UI components meet 3:1
-
-### Automated Testing
-```bash
-# Run test suite
+npm ci
+npm run check
 npm test
-
-# Check for accessibility issues in browser
-# Use axe DevTools or Lighthouse
+npm run build
 ```
 
-## 📝 Notes
-
-### What's Working
-- ✅ All interactive elements are keyboard accessible
-- ✅ Focus indicators meet WCAG 2.2 AA requirements
-- ✅ Form labels and instructions are proper
-- ✅ ARIA attributes enhance screen reader experience
-- ✅ Touch targets meet minimum size (44x44px)
-- ✅ Data persists correctly to localStorage
-- ✅ Color is not the only visual indicator
-
-### Future Improvements (AAA Level)
-- [ ] 1.4.6 Contrast (Enhanced) - 7:1 ratio
-- [ ] 1.4.8 Visual Presentation - wider spacing options
-- [ ] 2.4.8 Location - breadcrumb navigation
-- [ ] 2.4.10 Section Headings
-- [ ] 3.3.5 Help - contextual help
-
-## 🚀 Running the Application
-
-```bash
-# Start development server
-cd /Users/mgifford/w3c-a11y-maturity-model
-npx vite --port 5173
-
-# Run tests
-npm test
-
-# Run tests with UI
-npm run test:ui
-```
-
-## ✨ Summary
-
-The W3C Accessibility Maturity Model assessment tool is now **WCAG 2.2 Level AA compliant** with:
-
-- **Enhanced keyboard navigation** with visible focus indicators
-- **Proper ARIA implementation** for screen readers
-- **Accessible forms** with labels, instructions, and error handling
-- **Touch-friendly** with 44x44px minimum target sizes
-- **Persistent data** that respects user input
-- **15 automated tests** confirming accessibility features
-
-All interactive elements can be operated via keyboard, all form fields have proper labels, and the application provides appropriate feedback for user actions.
+Then follow the manual checklist in [README.md](./README.md#testing) and update this file with what
+was actually tested, by whom, and with which browser and assistive technology.

@@ -1,106 +1,126 @@
 <script lang="ts">
+  import { MODEL } from '../lib/maturity';
+
   let isExpanded = true;
-  
+
   function toggleIntro() {
     isExpanded = !isExpanded;
   }
 </script>
 
-<div class="introduction" aria-labelledby="intro-heading">
-  <button 
-    class="intro-toggle" 
-    on:click={toggleIntro}
-    aria-expanded={isExpanded}
-    aria-controls="intro-content"
-  >
-    <h2 id="intro-heading">
-      About the W3C Accessibility Maturity Model
+<section class="introduction" aria-labelledby="intro-heading">
+  <h2 id="intro-heading">
+    <button class="intro-toggle" on:click={toggleIntro} aria-expanded={isExpanded} aria-controls="intro-content">
+      <span>About the {MODEL.acronym}</span>
       <span class="toggle-icon" aria-hidden="true">{isExpanded ? '−' : '+'}</span>
-    </h2>
-  </button>
-  
+    </button>
+  </h2>
+
   {#if isExpanded}
     <div id="intro-content" class="intro-content">
       <p>
-        The <strong>W3C Accessibility Maturity Model</strong> helps organizations systematically assess 
-        and improve their digital accessibility practices. This tool guides you through a comprehensive 
-        evaluation across seven key dimensions of organizational accessibility.
+        The <strong>{MODEL.name} ({MODEL.acronym})</strong> is an adaptable framework for measuring how
+        effectively an organization's operations produce and sustain accessible digital products and
+        services. It looks at seven dimensions of an organization, each assessed against four maturity
+        levels.
       </p>
-      
-      <h3>Why Use This Model?</h3>
+
+      <h3>What this tool is, and is not</h3>
+      <div class="disclosure">
+        <p><strong>This tool is</strong></p>
+        <ul>
+          <li>
+            an independent, unaffiliated assessment aid built on the {MODEL.acronym}, published by the
+            {' '}{MODEL.publisher} as a <strong>{MODEL.version}</strong>;
+          </li>
+          <li>a structured way to discuss how your organization produces and sustains accessible outcomes.</li>
+        </ul>
+        <p><strong>This tool is not</strong></p>
+        <ul>
+          <li>
+            a W3C product, and it is not endorsed by W3C or its Members. The {MODEL.acronym} is a
+            Group Note, not a W3C Recommendation or a standard;
+          </li>
+          <li>
+            a conformance test, audit, certification, or compliance determination. Maturity assessment
+            complements accessibility conformance testing; it does not replace it.
+          </li>
+        </ul>
+        <p>
+          Results are informational and advisory. Final responsibility for interpretation,
+          prioritization, and action rests with your organization and its accessibility experts.
+        </p>
+      </div>
+
+      <h3>Why use this model?</h3>
       <ul>
-        <li><strong>Structured Assessment:</strong> Evaluate your organization's accessibility maturity across multiple dimensions</li>
-        <li><strong>Actionable Insights:</strong> Identify strengths and areas for improvement with specific proof points</li>
-        <li><strong>Progress Tracking:</strong> Measure advancement through five maturity levels from Initial to Sustained</li>
-        <li><strong>Strategic Planning:</strong> Build a roadmap for enhancing accessibility throughout your organization</li>
-        <li><strong>Stakeholder Communication:</strong> Generate clear visualizations and reports for leadership</li>
+        <li><strong>Structured assessment:</strong> consider your organization's maturity across seven dimensions</li>
+        <li><strong>Shared language:</strong> compare dimensions without turning the result into a pass or fail</li>
+        <li><strong>Progress tracking:</strong> follow advancement through four maturity levels: Inactive, Launch, Integrate, and Optimize</li>
+        <li><strong>Planning:</strong> identify gaps and build a roadmap for improving accessibility</li>
+        <li><strong>Communication:</strong> generate a summary you can discuss with leadership and stakeholders</li>
       </ul>
 
-      <h3>Learn More</h3>
+      <h3>Learn more</h3>
       <ul class="resource-links">
         <li>
-          <a 
-            href="https://www.w3.org/TR/maturity-model/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
-            W3C Accessibility Maturity Model Specification
-            <span class="sr-only">(opens in new tab)</span>
+          <a href={MODEL.url} target="_blank" rel="noopener noreferrer">
+            {MODEL.name} Group Note
+            <span class="sr-only">(opens in a new tab)</span>
           </a>
         </li>
         <li>
-          <a 
-            href="https://www.w3.org/WAI/planning/statements/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
-            Accessibility Statements Generator
-            <span class="sr-only">(opens in new tab)</span>
+          <a href={MODEL.editorDraftUrl} target="_blank" rel="noopener noreferrer">
+            {MODEL.name} editor's draft
+            <span class="sr-only">(opens in a new tab)</span>
           </a>
         </li>
         <li>
-          <a 
-            href="https://www.w3.org/WAI/planning-and-managing/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
-            Planning and Managing Web Accessibility
-            <span class="sr-only">(opens in new tab)</span>
+          <a href="https://www.w3.org/WAI/planning/statements/" target="_blank" rel="noopener noreferrer">
+            Accessibility statements generator
+            <span class="sr-only">(opens in a new tab)</span>
           </a>
         </li>
         <li>
-          <a 
-            href="https://www.w3.org/WAI/fundamentals/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-          >
-            Accessibility Fundamentals Overview
-            <span class="sr-only">(opens in new tab)</span>
+          <a href="https://www.w3.org/WAI/fundamentals/" target="_blank" rel="noopener noreferrer">
+            Accessibility fundamentals overview
+            <span class="sr-only">(opens in a new tab)</span>
           </a>
         </li>
       </ul>
 
       <div class="quick-start">
-        <h3>Getting Started</h3>
+        <h3>Getting started</h3>
         <ol>
           <li>Enter your organization information below</li>
           <li>Review each of the seven dimensions</li>
-          <li>Mark applicable proof points for your organization</li>
-          <li>Select your current maturity level for each dimension</li>
-          <li>View your results and generate a comprehensive report</li>
+          <li>Record the status and evidence for each proof point</li>
+          <li>Select the maturity level your evidence supports for each dimension</li>
+          <li>Review the summary report and plan next steps</li>
         </ol>
+        <p class="note">
+          Levels are cumulative: a dimension reaches a higher level only once the outcomes at the lower
+          levels are met. The {MODEL.acronym} defines maturity per dimension; it does not define an
+          overall organizational score.
+        </p>
       </div>
     </div>
   {/if}
-</div>
+</section>
 
 <style>
   .introduction {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--color-intro-from) 0%, var(--color-intro-to) 100%);
+    color: #ffffff;
     border-radius: 8px;
     margin-bottom: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
   }
 
   .intro-toggle {
@@ -109,26 +129,20 @@
     border: none;
     padding: 1.5rem;
     cursor: pointer;
-    color: white;
+    color: #ffffff;
     text-align: left;
-    transition: background-color 0.2s;
-  }
-
-  .intro-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .intro-toggle:focus {
-    outline: 3px solid #ffd700;
-    outline-offset: -3px;
-  }
-
-  .intro-toggle h2 {
-    margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     font-size: 1.5rem;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 8px;
+  }
+
+  .intro-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.12);
   }
 
   .toggle-icon {
@@ -139,36 +153,28 @@
 
   .intro-content {
     padding: 0 1.5rem 1.5rem;
-    animation: slideDown 0.3s ease-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   .intro-content p {
     font-size: 1.1rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
+    max-width: 68ch;
   }
 
   .intro-content h3 {
     font-size: 1.3rem;
     margin: 1.5rem 0 1rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.45);
     padding-bottom: 0.5rem;
+    color: #ffffff;
   }
 
-  .intro-content ul {
+  .intro-content ul,
+  .intro-content ol {
     margin: 1rem 0;
     padding-left: 1.5rem;
+    max-width: 68ch;
   }
 
   .intro-content li {
@@ -176,37 +182,38 @@
     line-height: 1.6;
   }
 
+  .disclosure {
+    background-color: rgba(0, 0, 0, 0.22);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid #ffffff;
+  }
+
+  .disclosure p {
+    margin-bottom: 0.5rem;
+  }
+
+  .disclosure ul {
+    margin: 0.25rem 0 1rem;
+  }
+
   .resource-links {
     list-style: none;
     padding-left: 0;
   }
 
-  .resource-links li {
-    margin-bottom: 0.75rem;
-  }
-
   .resource-links a {
-    color: #ffd700;
-    text-decoration: none;
-    font-weight: 500;
-    border-bottom: 2px solid transparent;
-    transition: border-color 0.2s;
-    padding-bottom: 2px;
+    color: var(--color-intro-link);
+    font-weight: 600;
   }
 
   .resource-links a:hover {
-    border-bottom-color: #ffd700;
-  }
-
-  .resource-links a:focus {
-    outline: 3px solid #ffd700;
-    outline-offset: 2px;
-    border-radius: 2px;
+    text-decoration-thickness: 3px;
   }
 
   .quick-start {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.22);
+    padding: 1rem 1.25rem;
     border-radius: 8px;
     margin-top: 1.5rem;
   }
@@ -216,31 +223,15 @@
     border-bottom: none;
   }
 
-  .quick-start ol {
-    margin: 0.5rem 0 0;
-    padding-left: 1.5rem;
-  }
-
-  .quick-start li {
-    margin-bottom: 0.5rem;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    @keyframes slideDown {
-      from, to {
-        opacity: 1;
-        transform: none;
-      }
-    }
+  .quick-start .note {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    font-size: 1rem;
   }
 
   @media (max-width: 768px) {
-    .intro-toggle h2 {
+    .intro-toggle {
       font-size: 1.25rem;
-    }
-
-    .intro-content p {
-      font-size: 1rem;
     }
 
     .intro-content h3 {

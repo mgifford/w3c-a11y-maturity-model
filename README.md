@@ -1,163 +1,186 @@
-# W3C Accessibility Maturity Model Assessment Tool# Svelte + TS + Vite
+# Accessibility Maturity Model — Assessment Tool
 
+An independent, static web tool for exploring the [Accessibility Maturity Model (AMM)](https://www.w3.org/TR/maturity-model/)
+and recording an organization's evidence against it.
 
+The AMM is published by the W3C Accessible Platform Architectures (APA) Working Group as a
+**W3C Group Note**. It is **not** a W3C Recommendation, and this tool is not a W3C product.
 
-A single-page application to help organizations assess their accessibility maturity across 7 dimensions based on the [W3C Accessibility Maturity Model](https://www.w3.org/TR/maturity-model/).This template should help get you started developing with Svelte and TypeScript in Vite.
+## What this tool is and is not
 
+**It is** a structured way to discuss how an organization produces and sustains accessible digital
+products and services, across the seven dimensions the model defines.
 
+**It is not** a conformance test, audit, certification, or compliance determination. Maturity
+assessment complements accessibility conformance testing; it does not replace it. Results are
+informational and advisory, and final responsibility for interpretation and action rests with the
+organization and its accessibility experts.
 
-## 🚀 Quick Start## Recommended IDE Setup
+The model defines maturity **per dimension**. It does not define an overall organizational maturity
+level, so this tool does not calculate one and does not present a combined score or grade.
 
+## Model version
 
+| Item | Value |
+| --- | --- |
+| Implements | Accessibility Maturity Model — W3C Group Note, 4 November 2025 |
+| Also incorporates | Editor's draft changes through 30 September 2026 |
+| Dimensions | 7 |
+| Proof points | 105 |
+| Maturity levels | 4 — Inactive, Launch, Integrate, Optimize |
 
-```bash[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+The editor's-draft changes incorporated here are:
 
-npm install --legacy-peer-deps
+- "Oversight and Culture" is now **Governance and Oversight**, and is assessed second.
+- The Governance and Oversight proof points are regrouped into Accountability, Financial
+  Commitment, Policy, General Training, Dimension Goals and Metrics, and **Continuity**.
+- New proof points cover continuity and resilience (single points of failure, backups, vacancy
+  procedures, retention of accessibility decisions), decision authority in role descriptions,
+  retention and attrition metrics, duplicated competencies, and procurement knowledge transfer.
+- ICT Development Lifecycle gains a **User Experience** category; Knowledge and Skills gains
+  **Dimension Integration**.
 
-npm run dev## Need an official Svelte framework?
+If the model changes again, update `src/data/dimensionsData.ts` and the tests in
+`src/test/dimensionsData.test.ts`, which assert the dimension names, order, and proof-point
+categories. See [Keeping the content in sync](#keeping-the-content-in-sync).
 
-```
+## Features
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+- All 7 dimensions, with the model's proof-point categories and a status for every proof point
+  (not started, planned, in progress, completed, or not applicable)
+- Per-dimension maturity-level selection, with a reminder that levels are cumulative and a warning
+  when Optimize is claimed while applicable proof points are still open
+- Evidence capture for completed proof points
+- Progress and distribution views, plus a radar chart with a text alternative
+- Summary report with a per-dimension table, printable from the browser
+- Export and import of assessment data as JSON
+- Light and dark themes, following the operating system preference by default
+- Local-only storage: answers stay in the browser and are never transmitted
 
-Visit http://localhost:5173
-
-## Technical considerations
-
-## 📦 Deploying to GitHub Pages
-
-**Why use this over SvelteKit?**
-
-### Step 1: Build the Project
-
-- It brings its own routing solution which might not be preferable for some users.
-
-```bash- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-npm run build
-
-```This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-
-
-This creates a `dist/` folder with optimized static files.Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-
-
-### Step 2: Enable GitHub Pages**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-
-
-1. Go to your repository on GitHubSetting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-2. Click **Settings** → **Pages**
-
-3. Under "Build and deployment", select **GitHub Actions** as the source**Why include `.vscode/extensions.json`?**
-
-
-
-### Step 3: Push to GitHubOther templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-
-
-```bash**Why enable `allowJs` in the TS template?**
-
-git add .
-
-git commit -m "Deploy to GitHub Pages"While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-git push origin main
-
-```**Why is HMR not preserving my local component state?**
-
-
-
-The GitHub Action will automatically build and deploy your site!HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-
-
-### Step 4: Access Your SiteIf you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-
-
-Once deployed (check the Actions tab), visit:```ts
-
-```// store.ts
-
-https://mgifford.github.io/w3c-a11y-maturity-model/// An extremely simple external store
-
-```import { writable } from 'svelte/store'
-
-export default writable(0)
-
-**Note**: Change the repo name in `vite.config.ts` if you rename the repository:```
-
-```typescript
-base: '/your-repo-name/',
-```
-
-## ✨ Features
-
-- 7 Dimensions Assessment with 120+ proof points
-- 4 Maturity Levels (Inactive, Launch, Integrate, Optimize)
-- Visual analytics with radar charts and progress tracking
-- Auto-save to localStorage
-- Export/Import JSON data
-- **WCAG 2.2 AA Compliant** - fully accessible
-- 15+ automated tests
-
-## 🧪 Testing
+## Getting started
 
 ```bash
-npm test           # Run tests
-npm run test:ui    # Run with UI
+npm ci
+npm run dev
 ```
 
-## 📖 Documentation
+Visit <http://localhost:5173>.
 
-- [WCAG_COMPLIANCE.md](./WCAG_COMPLIANCE.md) - Accessibility compliance details
-- [ACCESSIBILITY.md](./ACCESSIBILITY.md) - Accessibility commitment and audit log
+### Scripts
 
-## 🛠️ Tech Stack
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Build static files into `dist/` |
+| `npm run preview` | Preview the production build |
+| `npm run check` | Type-check Svelte and TypeScript (`svelte-check` + `tsc`) |
+| `npm test` | Run the test suite |
+| `npm run test:ui` | Run tests in the Vitest UI |
 
-- Svelte 4.2.0
-- Vite 7.2.2
-- TypeScript
-- Vitest + Testing Library
+## Testing
 
+```bash
+npm run check   # 0 errors
+npm test        # unit, component, contrast and axe checks
+npm run build
+```
+
+The suite covers:
+
+- **Data contract** — dimension ids, names, order, proof-point categories and the continuity proof
+  points the model requires (`src/test/dimensionsData.test.ts`)
+- **Contrast** — reads the design tokens straight from `src/app.css` and asserts WCAG 2.2 AA ratios
+  for both themes (`src/test/colorContrast.test.ts`)
+- **ARIA and structure** — axe-core against the rendered overview and a dimension view
+  (`src/test/accessibility.test.ts`)
+- Component behaviour and store logic
+
+Automated checks do not replace manual review. Before merging a UI change:
+
+1. Navigate the primary controls with the keyboard only, including the skip link.
+2. Confirm focus is always visible, and that focus returns to the Share button when the share panel
+   closes.
+3. Check light and dark themes, and Windows High Contrast mode.
+4. Zoom to 200% and check that nothing is clipped.
+5. Spot-check with at least one screen reader.
+
+## Accessibility
+
+This project targets WCAG 2.2 Level AA but does not claim formal conformance. Known gaps and
+verification notes are recorded in [ACCESSIBILITY.md](./ACCESSIBILITY.md) and
+[WCAG_COMPLIANCE.md](./WCAG_COMPLIANCE.md).
+
+Design tokens live in `src/app.css`. Component styles must use those tokens rather than hard-coded
+colours, so that both themes stay accessible; the contrast tests enforce this.
+
+## Data and privacy
+
+- Answers are stored in the browser's `localStorage` under `a11y-assessment` (and the theme under
+  `a11y-theme`).
+- Nothing is sent to a server. There is no analytics and no tracking.
+- **Export your data before clearing the browser**; "New Assessment" permanently clears stored
+  answers.
+- The organization name, team-member names, and evidence text you enter are stored locally. Do not
+  enter personal or confidential information you would not want left on the device.
+
+## Deployment
+
+The site is deployed to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`.
+
+`vite.config.ts` sets the production base path to `/w3c-a11y-maturity-model/`; if the repository is
+renamed, update `base` there and the absolute `og:image` URLs in `index.html`.
+
+All links and assets use relative paths so the site works under the repository subpath. Everything
+is static: there is no server-side routing and no build step at request time.
+
+## Keeping the content in sync
+
+1. Compare the [published Group Note](https://www.w3.org/TR/maturity-model/) and the
+   [editor's draft](https://w3c.github.io/maturity-model/) with `src/data/dimensionsData.ts`.
+2. Update dimension names, order, descriptions, categories and proof points.
+3. Update `MODEL` in `src/lib/maturity.ts` (version, dates, URLs).
+4. Run `npm run check && npm test` — the data-contract tests will point at anything missed.
+5. Note the change here under [Model version](#model-version).
+
+## Limitations
+
+- The model's own experimental assessment spreadsheet is a prototype; this tool is an independent
+  implementation of the same model, not an official one.
+- Custom extensions to the model (adding dimensions or proof points, or renaming terminology) are
+  not yet supported in the interface. The model permits them, provided the four levels and
+  progression logic are preserved and adaptations are recorded.
+- Scoping an assessment to a business unit or to selected dimensions is described by the model but
+  is not yet offered by the UI.
+- Per-dimension level outcome text from the model is not yet shown in the level picker; the picker
+  shows the model's general level descriptions.
+- External pages linked from this tool are outside this project's control.
+
+## Contributing
+
+- Keep changes focused and describe the content, conceptual, and accessibility impact in the pull
+  request.
+- Run `npm run check`, `npm test`, and `npm run build` before opening a pull request.
+- Do not commit secrets, and prefer minimal, well-maintained dependencies.
+- State any known trade-offs or limitations rather than hiding them.
 
 ## AI Disclosure
 
-This project uses AI tools during development. No AI runs at runtime — the deployed application is a static site with no server-side or browser-based AI components.
+AI tools have been used during development. No AI runs at runtime — this is a static site with no
+server-side or browser-based AI components.
 
 ### How AI has been used to build this project
 
 | AI Tool | Used For |
-|---------|----------|
-| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, adding comprehensive test coverage (including new component tests, data integrity tests, and accessibility tests), and generating documentation across multiple pull requests.<br><br>Also used to implement dark/light mode toggle with accessibility-compliant theme switching, replace ACCESSIBILITY_FIXES.md with ACCESSIBILITY.md, and draft and refine `DEFINITION_OF_DONE.md`.<br><br>Also used to resolve 27 WCAG color-contrast failures reported by Accessibility Insights by fixing a case-mismatch bug in `MaturityVisualization.svelte`'s `getColor()` function, updating maturity-level badge and text colors across `MaturityVisualization.svelte`, `DimensionList.svelte`, and `Summary.svelte` to meet WCAG 2.1 AA (4.5:1) contrast ratios, and adding regression tests for the new accessible color values. |
+| --- | --- |
+| **GitHub Copilot** (powered by Claude) | Writing and reviewing code, fixing bugs, resolving dependency conflicts, setting up CI/CD workflows, improving accessibility, adding test coverage, and generating documentation across earlier pull requests. Also used to add the dark/light theme toggle, replace `ACCESSIBILITY_FIXES.md` with `ACCESSIBILITY.md`, draft `DEFINITION_OF_DONE.md`, and resolve WCAG color-contrast failures reported by Accessibility Insights. |
+| **DeepSeek** (`deepseek-flash` via DeepSeek Harness) | Reviewing the repository and its open Dependabot pull requests; fixing WCAG 2.2 AA issues (contrast, heading and landmark structure, form labelling, dialog focus management, live regions, table caption, reduced motion, forced colours); rebuilding the design tokens and dark theme; syncing the dimension and proof-point content to the AMM Group Note and 2026 editor's draft; removing the unsanctioned overall maturity score; adding the data-contract, contrast and axe test suites; and updating this documentation. |
 
 ### Is AI used when running the program?
 
-No. The application is a fully static Svelte/TypeScript site. No AI model is invoked at runtime, server-side, or in the browser when a user interacts with the tool.
-
-### Is browser-based AI enabled?
-
-No. The application does not use any browser-based AI APIs (e.g., WebLLM, window.ai, or similar). All computation is standard JavaScript with no AI inference.
+No. The application is a static Svelte/TypeScript site. No AI model is invoked at runtime, on the
+server, or in the browser.
 
 ### Notes
 
-- Each AI-assisted contribution is made via pull requests authored by `Copilot` in the GitHub repository history.
+- Each AI-assisted contribution is made via pull requests in the repository history.
 - This disclosure will be updated as additional AI tools are introduced or their use changes.
-
-## 📣 Social Media Integration
-
-- Open Graph meta tags are included in index.html for rich link previews.
-- A share panel is available via the "Share" button in the header with:
-	- Web Share API on supported devices
-	- LinkedIn, Bluesky, Mastodon, Email links
-	- Copy link to clipboard
-- Social preview image lives at public/social-card.svg (1200x630). For best compatibility, replace with a PNG:
-	- Create a 1200x630 PNG (under 1MB) at public/social-card.png
-	- Update index.html to point og:image to ./social-card.png
-- Mastodon prompts for your instance domain on first use and remembers it.
-- All assets and links use relative paths to work under the GitHub Pages base path.

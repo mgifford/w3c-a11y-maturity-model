@@ -15,7 +15,7 @@ describe('OrganizationInfo Component', () => {
     const input = screen.getByLabelText(/organization name/i);
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute('required');
-    expect(input).toHaveAttribute('aria-required', 'true');
+    expect(input).toHaveAccessibleName(/organization name.*required/i);
   });
 
   it('renders assessor input and add button', () => {
@@ -59,7 +59,7 @@ describe('OrganizationInfo Component', () => {
     const input = screen.getByRole('textbox', { name: /assessment team members/i }) as HTMLInputElement;
     
     await fireEvent.input(input, { target: { value: 'Jane Smith' } });
-    await fireEvent.keyPress(input, { key: 'Enter', code: 'Enter' });
+    await fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
     
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
   });

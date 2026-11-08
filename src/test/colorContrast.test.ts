@@ -1,250 +1,125 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 /**
- * Calculates the relative luminance of an sRGB color per WCAG 2.x spec.
- * https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+ * Contrast tests that read the real design tokens from src/app.css.
+ *
+ * The previous version of this suite asserted hard-coded hex pairs, so it kept
+ * passing while the stylesheet drifted away from it. These tests fail when the
+ * stylesheet stops meeting WCAG 2.2 AA.
  */
-function relativeLuminance(hex: string): number {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
 
-  const linearize = (c: number) =>
-    c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+const css = readFileSync(resolve(process.cwd(), 'src/app.css'), 'utf8');
 
-  return 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b);
+function themeTokens(anchor: string): Record<string, string> {
+  const anchorIndex = css.indexOf(anchor);
+  if (anchorIndex === -1) throw new Error(`Theme anchor not found: ${anchor}`);
+  const open = css.indexOf('{', anchorIndex);
+  const close = css.indexOf('}', open);
+  const block = css.slice(open + 1, close);
+  const map: Record<string, string> = {};
+  for (const match of block.matchAll(/(--[\w-]+):\s*([^;]+);/g)) {
+    map[match[1]] = match[2].trim();
+  }
+  return map;
 }
 
-/**
- * Calculates the WCAG contrast ratio between two hex colors.
- * https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio
- */
-function contrastRatio(hex1: string, hex2: string): number {
-  const l1 = relativeLuminance(hex1);
-  const l2 = relativeLuminance(hex2);
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
+const light = themeTokens("[data-theme='light']");
+const dark = themeTokens("[data-theme='dark']");
+
+function luminance(hex: string): number {
+  const value = hex.replace('#', '');
+  const channels = [0, 2, 4].map((offset) => parseInt(value.slice(offset, offset + 2), 16) / 255);
+  const linear = channels.map((c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)));
+  return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+}
+
+function contrast(foreground: string, background: string): number {
+  const a = luminance(foreground);
+  const b = luminance(background);
+  const lighter = Math.max(a, b);
+  const darker = Math.min(a, b);
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-describe('WCAG color contrast - Header btn-secondary', () => {
-  const WHITE = '#ffffff';
-  // Colors used by .btn-secondary in Header.svelte
-  const BTN_SECONDARY_BG = '#2471a3';
-  const BTN_SECONDARY_HOVER_BG = '#1a5c8a';
+/** Resolve a token name to its hex value for the given theme. */
+function token(theme: Record<string, string>, name: string): string {
+  const value = theme[name];
+  if (!value) throw new Error(`Missing token ${name}`);
+  return value;
+}
 
-  it('btn-secondary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_SECONDARY_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
+type Pair = [foreground: string, background: string, minimum: number, description: string];
+
+const TEXT = 4.5;
+const LARGE_OR_UI = 3;
+
+const pairs: Pair[] = [
+  ['--color-text', '--color-bg', TEXT, 'body text on page background'],
+  ['--color-text', '--color-surface', TEXT, 'body text on cards'],
+  ['--color-text-muted', '--color-surface', TEXT, 'muted text on cards'],
+  ['--color-text-muted', '--color-surface-alt', TEXT, 'muted text on alt surfaces'],
+  ['--color-heading', '--color-surface', TEXT, 'headings on cards'],
+  ['--color-link', '--color-surface', TEXT, 'links on cards'],
+  ['--color-link', '--color-bg', TEXT, 'links on page background'],
+  ['--color-footer-text', '--color-footer-bg', TEXT, 'footer text'],
+  ['--color-footer-link', '--color-footer-bg', TEXT, 'footer links'],
+  ['--color-header-text', '--color-header-bg-start', TEXT, 'header text (gradient start)'],
+  ['--color-header-text', '--color-header-bg-end', TEXT, 'header text (gradient end)'],
+  ['#ffffff', '--color-intro-from', TEXT, 'introduction text (gradient start)'],
+  ['#ffffff', '--color-intro-to', TEXT, 'introduction text (gradient end)'],
+  ['--color-intro-link', '--color-intro-from', TEXT, 'introduction links (gradient start)'],
+  ['--color-intro-link', '--color-intro-to', TEXT, 'introduction links (gradient end)'],
+  ['--color-btn-secondary-bg', '#ffffff', TEXT, 'secondary button label'],
+  ['--color-btn-secondary-hover', '#ffffff', TEXT, 'secondary button hover label'],
+  ['--color-btn-danger-bg', '#ffffff', TEXT, 'danger button label'],
+  ['--color-btn-danger-hover', '#ffffff', TEXT, 'danger button hover label'],
+  ['--color-banner-from', '#ffffff', TEXT, 'completion banner label (gradient start)'],
+  ['--color-banner-to', '#ffffff', TEXT, 'completion banner label (gradient end)'],
+  ['--color-accent-green', '--color-surface', TEXT, 'green action label on cards'],
+  ['--color-level-inactive', '#ffffff', TEXT, 'Inactive badge'],
+  ['--color-level-launch', '#ffffff', TEXT, 'Launch badge'],
+  ['--color-level-integrate', '#ffffff', TEXT, 'Integrate badge'],
+  ['--color-level-optimize', '#ffffff', TEXT, 'Optimize badge'],
+  ['--color-level-none', '#ffffff', TEXT, 'Not assessed badge'],
+  ['--color-accent-blue', '--color-progress-track', LARGE_OR_UI, 'progress fill against track'],
+  ['--color-accent-green', '--color-progress-track', LARGE_OR_UI, 'proof point fill against track'],
+  ['--color-focus', '--color-surface', LARGE_OR_UI, 'focus ring on cards'],
+  ['--color-focus', '--color-bg', LARGE_OR_UI, 'focus ring on page background'],
+  ['--color-focus-on-dark', '--color-footer-bg', LARGE_OR_UI, 'focus ring on footer'],
+  ['--color-table-head-text', '--color-table-head-bg', TEXT, 'table header text']
+];
+
+describe.each([
+  ['light', light],
+  ['dark', dark]
+])('%s theme', (name, theme) => {
+  it('defines every token used by the other theme', () => {
+    const extra = Object.keys(theme).filter((key) => !(key in (name === 'light' ? dark : light)));
+    expect(extra).toEqual([]);
   });
 
-  it('btn-secondary hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_SECONDARY_HOVER_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('old btn-secondary color #3498db fails contrast (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#3498db', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
+  it.each(pairs)(
+    '%s on %s meets %s:1 (%s)',
+    (foreground, background, minimum, _description) => {
+      const fg = foreground.startsWith('#') ? foreground : token(theme, foreground);
+      const bg = background.startsWith('#') ? background : token(theme, background);
+      expect(contrast(fg, bg)).toBeGreaterThanOrEqual(minimum);
+    }
+  );
 });
 
-describe('WCAG color contrast - Summary btn-primary and btn-secondary', () => {
-  const WHITE = '#ffffff';
-  // Colors used by .btn-primary and .btn-secondary in Summary.svelte
-  const BTN_PRIMARY_BG = '#2471a3';
-  const BTN_PRIMARY_HOVER_BG = '#1a5c8a';
-  const BTN_SECONDARY_BG = '#546475';
-  const BTN_SECONDARY_HOVER_BG = '#435262';
-
-  it('btn-primary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_PRIMARY_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
+describe('token hygiene', () => {
+  it('every token value is a hex colour', () => {
+    for (const [key, value] of Object.entries({ ...light, ...dark })) {
+      expect(value, `${key} should be a hex colour`).toMatch(/^#[0-9a-fA-F]{6}$/);
+    }
   });
 
-  it('btn-primary hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_PRIMARY_HOVER_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('btn-secondary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_SECONDARY_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('btn-secondary hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_SECONDARY_HOVER_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('old btn-primary color #3498db fails contrast (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#3498db', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
-
-  it('old btn-secondary color #95a5a6 fails contrast (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#95a5a6', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
-});
-
-describe('WCAG color contrast - OrganizationInfo btn-add', () => {
-  const WHITE = '#ffffff';
-  // Colors used by .btn-add in OrganizationInfo.svelte
-  const BTN_ADD_BG = '#1a7a40';
-  const BTN_ADD_HOVER_BG = '#155d30';
-
-  it('btn-add background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_ADD_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('btn-add hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_ADD_HOVER_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('old btn-add color #27ae60 fails contrast (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#27ae60', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
-
-  it('old btn-add hover color #229954 fails contrast (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#229954', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
-});
-
-describe('WCAG color contrast - SocialShare btn-primary', () => {
-  const WHITE = '#ffffff';
-  // Colors used by .btn-primary in SocialShare.svelte
-  const BTN_PRIMARY_BG = '#2471a3';
-
-  it('btn-primary background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    const ratio = contrastRatio(BTN_PRIMARY_BG, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('old btn-primary color #3498db fails contrast (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#3498db', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
-});
-
-describe('WCAG color contrast - muted text color (#595959)', () => {
-  const WHITE = '#ffffff';
-  const LIGHT_BG = '#f5f7fa';
-  // New accessible muted text color used in help-text, subtitle, stat-label, etc.
-  const MUTED_TEXT = '#595959';
-
-  it('muted text color meets WCAG 2.1 AA normal text contrast on white (4.5:1)', () => {
-    const ratio = contrastRatio(MUTED_TEXT, WHITE);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('muted text color meets WCAG 2.1 AA normal text contrast on light background (4.5:1)', () => {
-    const ratio = contrastRatio(MUTED_TEXT, LIGHT_BG);
-    expect(ratio).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('old muted text color #7f8c8d fails WCAG 2.1 AA contrast on white (documents the regression it prevents)', () => {
-    const oldRatio = contrastRatio('#7f8c8d', WHITE);
-    expect(oldRatio).toBeLessThan(4.5);
-  });
-});
-
-describe('WCAG color contrast - maturity level badge/text colors', () => {
-  const WHITE = '#ffffff';
-  // Light background used in dimension bar items in MaturityVisualization
-  const LIGHT_CARD_BG = '#f8f9fa';
-
-  // Accessible maturity level colors used in MaturityVisualization, DimensionList, Summary
-  const INACTIVE_COLOR = '#c62828';
-  const LAUNCH_COLOR = '#b45309';
-  const INTEGRATE_COLOR = '#1565c0';
-  const OPTIMIZE_COLOR = '#2e7d32';
-  const NOT_ASSESSED_COLOR = '#455a64';
-
-  it('inactive color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
-    expect(contrastRatio(INACTIVE_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('launch color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
-    expect(contrastRatio(LAUNCH_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('integrate color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
-    expect(contrastRatio(INTEGRATE_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('optimize color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
-    expect(contrastRatio(OPTIMIZE_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('not-assessed color meets WCAG 2.1 AA contrast with white text (4.5:1)', () => {
-    expect(contrastRatio(NOT_ASSESSED_COLOR, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('inactive color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
-    expect(contrastRatio(INACTIVE_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('launch color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
-    expect(contrastRatio(LAUNCH_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('integrate color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
-    expect(contrastRatio(INTEGRATE_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('optimize color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
-    expect(contrastRatio(OPTIMIZE_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('not-assessed color meets WCAG 2.1 AA contrast on light card background (4.5:1)', () => {
-    expect(contrastRatio(NOT_ASSESSED_COLOR, LIGHT_CARD_BG)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  // Document that old colors failed
-  it('old not-assessed color #95a5a6 fails WCAG 2.1 AA contrast with white text', () => {
-    expect(contrastRatio('#95a5a6', WHITE)).toBeLessThan(4.5);
-  });
-
-  it('old not-assessed color #e0e0e0 fails WCAG 2.1 AA contrast with white text', () => {
-    expect(contrastRatio('#e0e0e0', WHITE)).toBeLessThan(4.5);
-  });
-
-  it('old inactive color #e74c3c fails WCAG 2.1 AA contrast with white text', () => {
-    expect(contrastRatio('#e74c3c', WHITE)).toBeLessThan(4.5);
-  });
-
-  it('old launch color #f39c12 fails WCAG 2.1 AA contrast with white text', () => {
-    expect(contrastRatio('#f39c12', WHITE)).toBeLessThan(4.5);
-  });
-
-  it('old integrate color #3498db fails WCAG 2.1 AA contrast with white text', () => {
-    expect(contrastRatio('#3498db', WHITE)).toBeLessThan(4.5);
-  });
-
-  it('old optimize color #27ae60 fails WCAG 2.1 AA contrast with white text', () => {
-    expect(contrastRatio('#27ae60', WHITE)).toBeLessThan(4.5);
-  });
-});
-
-describe('WCAG color contrast - DimensionList btn-assess', () => {
-  const WHITE = '#ffffff';
-  const BTN_ASSESS_BG = '#1565c0';
-  const BTN_ASSESS_HOVER_BG = '#0d47a1';
-
-  it('btn-assess background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    expect(contrastRatio(BTN_ASSESS_BG, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('btn-assess hover background meets WCAG 2.1 AA normal text contrast (4.5:1)', () => {
-    expect(contrastRatio(BTN_ASSESS_HOVER_BG, WHITE)).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it('old btn-assess color #3498db fails WCAG 2.1 AA contrast', () => {
-    expect(contrastRatio('#3498db', WHITE)).toBeLessThan(4.5);
+  it('the footer link is not the light-theme body link colour', () => {
+    // The regression behind the open accessibility issue: #0066cc on #2c3e50
+    // is 1.97:1.
+    expect(light['--color-footer-link']).not.toBe(light['--color-link']);
   });
 });

@@ -33,7 +33,7 @@ describe('SocialShare Component', () => {
     render(SocialShare, { props: { open: true, onClose } });
     
     const dialog = screen.getByRole('dialog');
-    expect(dialog).toHaveAttribute('aria-label', 'Share this tool');
+    expect(dialog).toHaveAccessibleName('Share this tool');
   });
 
   it('renders LinkedIn share link', () => {
@@ -115,7 +115,7 @@ describe('SocialShare Component', () => {
     await fireEvent.click(mastodonBtn);
     
     expect(screen.getByRole('group', { name: /mastodon instance setup/i })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/your\.instance/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/your mastodon server/i)).toBeInTheDocument();
   });
 
   it('shows instance setup input with label', async () => {
@@ -124,7 +124,7 @@ describe('SocialShare Component', () => {
     const mastodonBtn = screen.getByRole('button', { name: /mastodon/i });
     await fireEvent.click(mastodonBtn);
     
-    expect(screen.getByLabelText(/enter your mastodon server/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/your mastodon server/i)).toBeInTheDocument();
   });
 
   it('copy link button shows "Copied!" feedback after click', async () => {
@@ -137,7 +137,7 @@ describe('SocialShare Component', () => {
     const copyBtn = screen.getByRole('button', { name: /copy link/i });
     await fireEvent.click(copyBtn);
     
-    expect(await screen.findByText(/copied!/i)).toBeInTheDocument();
+    expect(await screen.findByText(/link copied to the clipboard/i)).toBeInTheDocument();
   });
 
   it('LinkedIn link includes current URL', () => {

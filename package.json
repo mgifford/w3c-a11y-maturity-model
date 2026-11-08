@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,22 +14,24 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "generate:social-card": "node scripts/generate-social-card.mjs",
-    "generate:favicon": "node scripts/generate-favicon.mjs"
+    "generate:favicon": "node scripts/generate-favicon.mjs",
+    "test:run": "vitest run"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^26.6.5",
     "@vitest/ui": "^5.0.5",
+    "axe-core": "^4.14.0",
     "jsdom": "^30.1.2",
+    "sharp": "^0.35.5",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.6",
+    "typescript": "~6.0.3",
     "vite": "^8.3.4",
-    "typescript": "~7.0.2",
-    "vitest": "^5.0.0",
-    "sharp": "^0.35.5",
-    "@resvg/resvg-js": "^2.6.2"
+    "vitest": "^5.0.0"
   }
 }

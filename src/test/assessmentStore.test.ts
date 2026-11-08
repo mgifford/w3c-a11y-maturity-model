@@ -140,23 +140,23 @@ describe('Assessment Store', () => {
       const state = get(store);
       const dimensionId = state.dimensions[0].id;
       
-      store.setMaturityLevel(dimensionId, 'Launch');
+      store.setMaturityLevel(dimensionId, 'launch');
       
       const updatedState = get(store);
       const dimension = updatedState.dimensions.find(d => d.id === dimensionId);
-      expect(dimension?.maturityLevel).toBe('Launch');
+      expect(dimension?.maturityLevel).toBe('launch');
     });
 
     it('should update dimension maturity level', () => {
       const state = get(store);
       const dimensionId = state.dimensions[0].id;
       
-      store.setMaturityLevel(dimensionId, 'Launch');
-      store.setMaturityLevel(dimensionId, 'Integrate');
+      store.setMaturityLevel(dimensionId, 'launch');
+      store.setMaturityLevel(dimensionId, 'integrate');
       
       const updatedState = get(store);
       const dimension = updatedState.dimensions.find(d => d.id === dimensionId);
-      expect(dimension?.maturityLevel).toBe('Integrate');
+      expect(dimension?.maturityLevel).toBe('integrate');
     });
   });
 
@@ -168,7 +168,7 @@ describe('Assessment Store', () => {
       const proofPointId = state.dimensions[0].proofPoints[0].id;
       
       store.toggleProofPoint(dimensionId, proofPointId);
-      store.setMaturityLevel(dimensionId, 'Launch');
+      store.setMaturityLevel(dimensionId, 'launch');
       
       // Check localStorage
       const saved = localStorage.getItem('a11y-assessment');
@@ -176,7 +176,7 @@ describe('Assessment Store', () => {
       
       const parsed = JSON.parse(saved!);
       expect(parsed.organizationName).toBe('Test Org');
-      expect(parsed.dimensions[0].maturityLevel).toBe('Launch');
+      expect(parsed.dimensions[0].maturityLevel).toBe('launch');
     });
 
     it('should load assessment from localStorage', () => {
@@ -242,13 +242,13 @@ describe('Assessment Store', () => {
       state.dimensions[0].proofPoints.forEach(pp => {
         store.toggleProofPoint(state.dimensions[0].id, pp.id);
       });
-      store.setMaturityLevel(state.dimensions[0].id, 'Optimize');
+      store.setMaturityLevel(state.dimensions[0].id, 'optimize');
       
       // Get progress from store's derived progress value
       // You'll need to export progress from the store file
       const updatedState = get(store);
       const dimension = updatedState.dimensions.find(d => d.id === state.dimensions[0].id);
-      expect(dimension?.maturityLevel).toBe('Optimize');
+      expect(dimension?.maturityLevel).toBe('optimize');
     });
   });
 });

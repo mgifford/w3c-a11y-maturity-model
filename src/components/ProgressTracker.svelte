@@ -51,11 +51,12 @@
 <section class="progress-tracker" aria-labelledby="progress-heading">
   <div class="progress-header">
     <h2 id="progress-heading">Assessment Progress</h2>
-    <div class="progress-stats">
-      <p class="progress-text" aria-live="polite">
+    <!-- One polite live region: both figures update together when a level is set -->
+    <div class="progress-stats" aria-live="polite">
+      <p class="progress-text">
         <strong>Dimensions:</strong> {completedCount} of {totalCount} assessed
       </p>
-      <p class="progress-text proof-points" aria-live="polite">
+      <p class="progress-text proof-points">
         <strong>Proof Points:</strong> {proofPointStats.completed} of {proofPointStats.total} completed
         {#if proofPointStats.inProgress > 0}
           · <span class="stat-in-progress">{proofPointStats.inProgress} in progress</span>
@@ -97,7 +98,7 @@
 
 <style>
   .progress-tracker {
-    background: white;
+    background: var(--color-surface);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -117,27 +118,27 @@
 
   h2 {
     font-size: 1.5rem;
-    color: #2c3e50;
+    color: var(--color-heading);
     margin: 0 0 0.75rem 0;
   }
 
   .progress-text {
-    color: #555;
+    color: var(--color-text-muted);
     font-size: 0.95rem;
     margin: 0;
   }
 
   .progress-text strong {
-    color: #2c3e50;
+    color: var(--color-heading);
   }
 
   .stat-in-progress {
-    color: #92400e;
+    color: var(--color-text);
     font-weight: 500;
   }
 
   .stat-planned {
-    color: #1e3a8a;
+    color: var(--color-text);
     font-weight: 500;
   }
 
@@ -148,13 +149,13 @@
   .progress-label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--color-heading);
     margin-bottom: 0.5rem;
   }
 
   .progress-bar-container {
     height: 24px;
-    background-color: #ecf0f1;
+    background-color: var(--color-progress-track);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
@@ -170,11 +171,11 @@
   }
 
   .dimension-bar {
-    background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+    background: linear-gradient(90deg, var(--color-accent-blue) 0%, var(--color-accent-blue-strong) 100%);
   }
 
   .proof-point-bar {
-    background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+    background: linear-gradient(90deg, var(--color-banner-from) 0%, var(--color-banner-to) 100%);
   }
 
   .progress-percentage {
@@ -182,14 +183,14 @@
     margin-top: 0.25rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #595959;
+    color: var(--color-text-muted);
   }
 
   .completion-banner {
     margin-top: 1.5rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--color-banner-from) 0%, var(--color-banner-to) 100%);
+    color: #ffffff;
     border-radius: 8px;
     text-align: center;
   }
@@ -210,8 +211,8 @@
   }
 
   .btn-primary {
-    background-color: white;
-    color: #27ae60;
+    background-color: var(--color-surface);
+    color: var(--color-accent-green);
   }
 
   .btn-primary:hover {

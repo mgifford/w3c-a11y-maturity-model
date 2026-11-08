@@ -27,7 +27,7 @@
     handleSave();
   }
 
-  function handleKeyPress(event: KeyboardEvent) {
+  function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       event.preventDefault();
       addAssessor();
@@ -38,9 +38,12 @@
 <section class="organization-info" aria-labelledby="org-info-heading">
   <h2 id="org-info-heading">Organization Information</h2>
   
+  <p class="required-note"><span aria-hidden="true">*</span> Required field</p>
+
   <div class="form-group">
     <label for="org-name">
-      Organization Name <span class="required">*</span>
+      Organization Name <span class="required" aria-hidden="true">*</span>
+      <span class="sr-only">(required)</span>
     </label>
     <input
       id="org-name"
@@ -50,7 +53,6 @@
       placeholder="Enter your organization name"
       class="input"
       required
-      aria-required="true"
     />
   </div>
 
@@ -61,7 +63,7 @@
         id="assessor-input"
         type="text"
         bind:value={assessorInput}
-        on:keypress={handleKeyPress}
+        on:keydown={handleKeydown}
         placeholder="Add team member name"
         class="input"
         aria-describedby="assessor-help"
@@ -88,9 +90,8 @@
             on:click={() => removeAssessor(index)}
             class="remove-btn"
             aria-label="Remove {assessor}"
-            title="Remove {assessor}"
           >
-            ×
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
       {/each}
@@ -100,7 +101,7 @@
 
 <style>
   .organization-info {
-    background: white;
+    background: var(--color-surface);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -109,7 +110,7 @@
 
   h2 {
     font-size: 1.5rem;
-    color: #2c3e50;
+    color: var(--color-heading);
     margin-bottom: 1.5rem;
   }
 
@@ -121,28 +122,34 @@
     display: block;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: #2c3e50;
+    color: var(--color-heading);
   }
 
   .required {
-    color: #e74c3c;
+    color: var(--color-level-inactive);
+  }
+
+  .required-note {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
   }
 
   .input {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #ddd;
+    border: 2px solid var(--color-border);
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.2s;
   }
 
   .input:hover {
-    border-color: #bbb;
+    border-color: var(--color-accent-blue);
   }
 
   .input:focus {
-    border-color: #3498db;
+    border-color: var(--color-accent-blue);
   }
 
   .assessor-input-group {
@@ -164,17 +171,17 @@
   }
 
   .btn-add {
-    background-color: #1a7a40;
+    background-color: var(--color-banner-from);
     color: white;
   }
 
   .btn-add:hover {
-    background-color: #155d30;
+    background-color: var(--color-banner-to);
   }
 
   .help-text {
     font-size: 0.875rem;
-    color: #595959;
+    color: var(--color-text-muted);
     margin-top: 0.5rem;
   }
 
@@ -189,7 +196,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: #ecf0f1;
+    background-color: var(--color-progress-track);
     padding: 0.5rem 0.75rem;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -198,7 +205,7 @@
   .remove-btn {
     background: none;
     border: none;
-    color: #e74c3c;
+    color: var(--color-level-inactive);
     font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
