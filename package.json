@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "check": "svelte-check --tsgo --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "generate:social-card": "node scripts/generate-social-card.mjs",
@@ -23,6 +23,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/svelte": "^5.4.2",
     "@tsconfig/svelte": "^5.0.8",
+    "@typescript/native": "npm:typescript@~7.0.2",
     "@types/node": "^26.6.6",
     "@vitest/ui": "^5.1.0",
     "axe-core": "^4.14.0",
@@ -30,7 +31,7 @@
     "sharp": "^0.35.5",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.8",
-    "typescript": "~7.0.2",
+    "typescript": "~6.0.3",
     "vite": "^8.3.6",
     "vitest": "^5.0.0"
   }
